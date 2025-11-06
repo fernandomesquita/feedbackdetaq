@@ -1,4 +1,4 @@
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuthWithProfile } from "@/hooks/useAuthWithProfile";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -21,15 +21,19 @@ import {
 } from "@/components/ui/sidebar";
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, MessageSquare, Bell, BookOpen, BarChart3 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", roles: [] },
+  { icon: MessageSquare, label: "Feedbacks", path: "/feedbacks", roles: [] },
+  { icon: Bell, label: "Avisos", path: "/avisos", roles: [] },
+  { icon: BookOpen, label: "Padronização", path: "/padronizacao", roles: [] },
+  { icon: BarChart3, label: "Estatísticas", path: "/statistics", roles: ["MASTER", "DIRETOR"] },
+  { icon: Users, label: "Usuários", path: "/users", roles: ["MASTER", "DIRETOR"] },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -46,7 +50,7 @@ export default function DashboardLayout({
     const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
     return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;
   });
-  const { loading, user } = useAuth();
+  const { isLoading: loading, user } = useAuthWithProfile();
 
   useEffect(() => {
     localStorage.setItem(SIDEBAR_WIDTH_KEY, sidebarWidth.toString());
@@ -115,7 +119,7 @@ function DashboardLayoutContent({
   children,
   setSidebarWidth,
 }: DashboardLayoutContentProps) {
-  const { user, logout } = useAuth();
+  const { user, logout, feedbackRole } = useAuthWithProfile();
   const [location, setLocation] = useLocation();
   const { state, toggleSidebar } = useSidebar();
   const isCollapsed = state === "collapsed";
@@ -209,7 +213,9 @@ function DashboardLayoutContent({
 
           <SidebarContent className="gap-0">
             <SidebarMenu className="px-2 py-1">
-              {menuItems.map(item => {
+              {menuItems
+                .filter(item => item.roles.length === 0 || (feedbackRole && item.roles.includes(feedbackRole)))
+                .map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>

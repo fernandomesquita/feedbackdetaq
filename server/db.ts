@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, InsertUserProfile } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -88,6 +88,76 @@ export async function getUserByOpenId(openId: string) {
   }
 
   const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserById(userId: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user: database not available");
+    return undefined;
+  }
+
+  const result = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function getUserWithProfile(userId: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get user: database not available");
+    return undefined;
+  }
+
+  const result = await db
+    .select()
+    .from(users)
+    .leftJoin(userProfiles, eq(users.id, userProfiles.userId))
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  if (result.length === 0) return undefined;
+
+  return {
+    ...result[0].users,
+    profile: result[0].user_profiles,
+  };
+}
+
+export async function upsertUserProfile(profile: InsertUserProfile) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot upsert profile: database not available");
+    return;
+  }
+
+  try {
+    await db.insert(userProfiles).values(profile).onDuplicateKeyUpdate({
+      set: {
+        feedbackRole: profile.feedbackRole,
+        updatedAt: new Date(),
+      },
+    });
+  } catch (error) {
+    console.error("[Database] Failed to upsert user profile:", error);
+    throw error;
+  }
+}
+
+export async function getUserProfile(userId: number) {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot get profile: database not available");
+    return undefined;
+  }
+
+  const result = await db
+    .select()
+    .from(userProfiles)
+    .where(eq(userProfiles.userId, userId))
+    .limit(1);
 
   return result.length > 0 ? result[0] : undefined;
 }

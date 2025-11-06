@@ -10,18 +10,18 @@
 - [x] Criar tabela user_profiles para perfis específicos
 
 ## FASE 2: Autenticação e Segurança (3-4 dias)
-- [ ] Criar API de login
-- [ ] Criar API de logout
-- [ ] Criar API de verificação de sessão (me)
-- [ ] Implementar geração e validação de JWT
-- [ ] Criar middleware de autenticação
-- [ ] Implementar RBAC (Role-Based Access Control)
-- [ ] Criar helpers de autorização
-- [ ] Implementar rate limiting
-- [ ] Criar sistema de auditoria (logAudit)
-- [ ] Criar API de consulta de logs de auditoria
-- [ ] Criar página de login
-- [ ] Implementar redirecionamento baseado em role
+- [x] Criar API de login (OAuth já integrado)
+- [x] Criar API de logout
+- [x] Criar API de verificação de sessão (me)
+- [x] Implementar geração e validação de JWT (já integrado)
+- [x] Criar middleware de autenticação (protectedProcedure)
+- [x] Implementar RBAC (Role-Based Access Control via feedbackRole)
+- [x] Criar helpers de autorização (useAuthWithProfile)
+- [ ] Implementar rate limiting (postergar para otimização)
+- [ ] Criar sistema de auditoria (logAudit) (implementar junto com funcionalidades)
+- [ ] Criar API de consulta de logs de auditoria (implementar junto com funcionalidades)
+- [x] Criar página de login
+- [x] Implementar redirecionamento baseado em role
 
 ## FASE 3: Layout e Navegação (2 dias)
 - [ ] Criar DashboardLayout com sidebar
@@ -158,3 +158,9 @@
 - [ ] Criar guia de instalação
 - [ ] Criar guia de uso
 - [ ] Executar checklist de validação final
+
+## NOTA: Fases 2 e 3 foram concluídas simultaneamente
+- Layout e navegação foram implementados junto com autenticação
+- DashboardLayout com sidebar responsivo e menu baseado em perfil
+- Página Dashboard inicial com cards de estatísticas
+- Redirecionamento automático após login
