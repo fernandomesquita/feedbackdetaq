@@ -322,3 +322,11 @@
 - [x] Atualizar CHANGELOG.md com correções
 - [x] Corrigir rotas do menu (statistics → estatisticas, users → usuarios)
 - [x] Adicionar try-catch em getFeedbackStats para tratar erro quando não há dados
+
+## MELHORIAS SOLICITADAS (06/11/2025)
+- [x] Adicionar API de criação de usuário (apenas MASTER)
+- [x] Adicionar API de exclusão de usuário (apenas MASTER) - já existia
+- [x] Adicionar botão de inclusão de usuário na interface
+- [x] Adicionar botão de exclusão de usuário na interface - já existia
+- [x] Criar dialog de criação de usuário
+- [x] Adicionar confirmação de exclusão de usuário - já existia

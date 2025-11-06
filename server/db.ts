@@ -241,3 +241,29 @@ export async function deleteUser(userId: number) {
   // Deletar usuário
   await db.delete(users).where(eq(users.id, userId));
 }
+
+export async function createUserWithProfile(data: {
+  openId: string;
+  name: string;
+  email: string;
+  feedbackRole: "MASTER" | "DIRETOR" | "REVISOR" | "TAQUIGRAFO";
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Criar usuário
+  const [userResult] = await db.insert(users).values({
+    openId: data.openId,
+    name: data.name,
+    email: data.email,
+    role: data.feedbackRole === "MASTER" ? "admin" : "user",
+  }).$returningId();
+
+  // Criar perfil
+  await db.insert(userProfiles).values({
+    userId: userResult.id,
+    feedbackRole: data.feedbackRole,
+  });
+
+  return userResult.id;
+}

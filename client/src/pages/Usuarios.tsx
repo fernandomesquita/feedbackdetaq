@@ -20,7 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Users, Edit, Trash2, Shield, AlertCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Users, Edit, Trash2, Shield, AlertCircle, UserPlus } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -37,8 +38,12 @@ const roleConfig = {
 export default function Usuarios() {
   const { feedbackRole, user: currentUser } = useAuthWithProfile();
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [newRole, setNewRole] = useState<string>("");
+  const [newUserName, setNewUserName] = useState("");
+  const [newUserEmail, setNewUserEmail] = useState("");
+  const [newUserRole, setNewUserRole] = useState<string>("TAQUIGRAFO");
 
   const utils = trpc.useUtils();
 
@@ -68,6 +73,20 @@ export default function Usuarios() {
     },
   });
 
+  const createMutation = trpc.users.create.useMutation({
+    onSuccess: () => {
+      utils.users.list.invalidate();
+      toast.success("Usuário criado com sucesso");
+      setIsCreateDialogOpen(false);
+      setNewUserName("");
+      setNewUserEmail("");
+      setNewUserRole("TAQUIGRAFO");
+    },
+    onError: (error) => {
+      toast.error("Erro ao criar usuário: " + error.message);
+    },
+  });
+
   const handleEdit = (user: any) => {
     setSelectedUser(user);
     setNewRole(user.feedbackRole || "TAQUIGRAFO");
@@ -86,6 +105,18 @@ export default function Usuarios() {
     if (confirm(`Deseja realmente remover o usuário "${user.name}"?`)) {
       deleteMutation.mutate({ id: user.id });
     }
+  };
+
+  const handleCreate = () => {
+    if (!newUserName || !newUserEmail) {
+      toast.error("Preencha todos os campos");
+      return;
+    }
+    createMutation.mutate({
+      name: newUserName,
+      email: newUserEmail,
+      feedbackRole: newUserRole as any,
+    });
   };
 
   if (!isMaster) {
@@ -118,14 +149,80 @@ export default function Usuarios() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <Users className="h-8 w-8" />
-            Gestão de Usuários
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Gerencie usuários e seus perfis de acesso
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+              <Users className="h-8 w-8" />
+              Gestão de Usuários
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Gerencie usuários e seus perfis de acesso
+            </p>
+          </div>
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <UserPlus className="h-4 w-4 mr-2" />
+                Novo Usuário
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Criar Novo Usuário</DialogTitle>
+                <DialogDescription>
+                  Adicione um novo usuário ao sistema
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Nome</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    value={newUserName}
+                    onChange={(e) => setNewUserName(e.target.value)}
+                    placeholder="Nome completo"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">E-mail</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={newUserEmail}
+                    onChange={(e) => setNewUserEmail(e.target.value)}
+                    placeholder="email@exemplo.com"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role">Perfil</Label>
+                  <Select value={newUserRole} onValueChange={setNewUserRole}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.entries(roleConfig).map(([role, config]) => (
+                        <SelectItem key={role} value={role}>
+                          {config.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsCreateDialogOpen(false)}
+                >
+                  Cancelar
+                </Button>
+                <Button onClick={handleCreate} disabled={createMutation.isPending}>
+                  {createMutation.isPending ? "Criando..." : "Criar Usuário"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Estatísticas */}
@@ -279,3 +376,4 @@ export default function Usuarios() {
     </DashboardLayout>
   );
 }
+

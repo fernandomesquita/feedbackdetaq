@@ -8,6 +8,19 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ## [Em Desenvolvimento] - 2025-11-06
 
+### ✨ Novas Funcionalidades
+
+#### Gestão de Usuários - Criação de Usuários
+- **Funcionalidade**: MASTER pode criar novos usuários diretamente pela interface
+- **Implementação**: 
+  - API `users.create` com validação de permissão MASTER
+  - Helper `createUserWithProfile()` no db.ts
+  - Dialog de criação com campos: nome, email, perfil
+  - Botão "Novo Usuário" no header da página
+  - Geração automática de openId para usuários manuais
+- **Arquivos alterados**: `server/routers.ts`, `server/db.ts`, `client/src/pages/Usuarios.tsx`
+- **Status**: ✅ Implementado
+
 ### 🐛 Correções
 
 #### Erro de Query em Padronização

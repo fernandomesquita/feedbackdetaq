@@ -153,6 +153,31 @@ export const appRouter = router({
         return user;
       }),
 
+    create: protectedProcedure
+      .input(z.object({
+        name: z.string().min(1),
+        email: z.string().email(),
+        feedbackRole: z.enum(["MASTER", "DIRETOR", "REVISOR", "TAQUIGRAFO"]),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Apenas MASTER pode criar usuários
+        const currentUserProfile = await db.getUserProfile(ctx.user.id);
+        if (currentUserProfile?.feedbackRole !== "MASTER") {
+          throw new Error("Apenas Master pode criar usuários");
+        }
+
+        // Criar usuário com openId gerado (simulação - em produção viria do OAuth)
+        const openId = `manual_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+        const userId = await db.createUserWithProfile({
+          openId,
+          name: input.name,
+          email: input.email,
+          feedbackRole: input.feedbackRole,
+        });
+        
+        return { success: true, userId };
+      }),
+
     updateProfile: protectedProcedure
       .input(z.object({
         userId: z.number(),
