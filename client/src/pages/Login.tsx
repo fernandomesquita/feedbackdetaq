@@ -98,8 +98,7 @@ export default function Login() {
           <div className="mt-6 text-center text-sm text-muted-foreground">
             <p>Credenciais de teste:</p>
             <div className="mt-2 space-y-1 text-xs">
-              <p>master@test.com | diretor@test.com</p>
-              <p>revisor@test.com | taquigrafo@test.com</p>
+              <p>diretor@test.com | revisor@test.com | taquigrafo@test.com</p>
               <p className="font-medium">Senha: abccbaabc</p>
             </div>
           </div>

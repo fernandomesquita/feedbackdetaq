@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { eq, ne, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import { InsertUser, users, userProfiles, InsertUserProfile, feedbacks } from "../drizzle/schema";
 import { ENV } from './_core/env';
@@ -204,7 +204,8 @@ export async function getAllUsersWithProfiles() {
       profileId: userProfiles.id,
     })
     .from(users)
-    .leftJoin(userProfiles, eq(users.id, userProfiles.userId));
+    .leftJoin(userProfiles, eq(users.id, userProfiles.userId))
+    .where(ne(users.openId, ENV.ownerOpenId)); // Ocultar MASTER da listagem
 
   return result;
 }

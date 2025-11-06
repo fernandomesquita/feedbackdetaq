@@ -111,7 +111,7 @@ export async function searchPadronizacao(query: string) {
  */
 
 import { padronizacaoReads } from "../drizzle/schema";
-import { and, count, sql, gt } from "drizzle-orm";
+import { and, count, sql, gt, isNull } from "drizzle-orm";
 
 export async function markPadronizacaoAsRead(padronizacaoId: number, userId: number) {
   const db = await getDb();
@@ -144,7 +144,7 @@ export async function getUnreadPadronizacaoCount(userId: number, since?: Date) {
     .where(
       and(
         gt(padronizacao.updatedAt, sinceDate),
-        eq(padronizacaoReads.id, sql`NULL`) // Não lido
+        isNull(padronizacaoReads.id) // Não lido
       )
     );
 

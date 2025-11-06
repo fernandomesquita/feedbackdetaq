@@ -178,3 +178,18 @@
 - [x] Corrigir query byMonth com GROUP BY usando alias ao invés de expressão completa
 - [x] Usar db.execute() com raw SQL para byMonth para evitar problemas de GROUP BY
 - [x] Converter count para number em todas as queries (MySQL retorna string)
+
+## PREPARAÇÃO PARA DEPLOY (06/11/2025 - 20:42)
+- [x] Remover OAuth completamente do sistema
+- [x] Manter apenas autenticação local (email/senha)
+- [x] Remover rotas e componentes de OAuth (registerOAuthRoutes comentado)
+- [x] Ocultar usuário MASTER da listagem de usuários
+- [x] Impedir diretores de editar/remover MASTER (filtrado em getAllUsersWithProfiles)
+- [x] Filtrar MASTER das APIs de listagem (WHERE ne(users.openId, ENV.ownerOpenId))
+- [x] Limpar credenciais de teste da página de login
+- [x] Remover linha "master@test.com | diretor@test.com"
+- [x] Gerar logo de caneta para substituir quadrado preto
+- [x] Logo salva em client/public/logo-caneta.png (usar VITE_APP_LOGO=/logo-caneta.png)
+- [x] Investigar por que badge de notificação não aparece
+- [x] Corrigir query getUnreadPadronizacaoCount (usar isNull ao invés de eq com NULL)
+- [x] Atualizar CHANGELOG com alterações finais

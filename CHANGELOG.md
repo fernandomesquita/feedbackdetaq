@@ -8,6 +8,47 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ## [Em Desenvolvimento] - 2025-11-06
 
+### 🚀 Preparação para Deploy
+
+#### Remoção do OAuth
+- **Alteração**: Sistema agora usa apenas autenticação local (email/senha)
+- **Motivo**: Simplificar deploy e remover dependência externa
+- **Implementação**: Rotas OAuth comentadas em `server/_core/index.ts`
+- **Arquivos alterados**: `server/_core/index.ts`
+- **Status**: ✅ Implementado
+
+#### Ocultação do Usuário MASTER
+- **Alteração**: Usuário MASTER não aparece mais na listagem de usuários
+- **Motivo**: Proteger conta administrativa principal
+- **Implementação**: Filtro `WHERE ne(users.openId, ENV.ownerOpenId)` em `getAllUsersWithProfiles()`
+- **Arquivos alterados**: `server/db.ts`
+- **Status**: ✅ Implementado
+- **Resultado**: Diretores não podem visualizar, editar ou excluir o MASTER
+
+#### Limpeza da Página de Login
+- **Alteração**: Removidas credenciais de teste do MASTER
+- **Motivo**: Segurança - não expor credenciais administrativas
+- **Implementação**: Atualizada seção de credenciais de teste
+- **Arquivos alterados**: `client/src/pages/Login.tsx`
+- **Status**: ✅ Implementado
+
+#### Nova Logo do Sistema
+- **Alteração**: Logo de caneta substituíndo quadrado preto
+- **Implementação**: Logo gerada e salva em `client/public/logo-caneta.png`
+- **Configuração**: Usar `VITE_APP_LOGO=/logo-caneta.png` nas variáveis de ambiente
+- **Arquivos criados**: `client/public/logo-caneta.png`
+- **Status**: ✅ Implementado
+
+#### Correção de Notificações de Padronização
+- **Problema**: Badge vermelho de notificação não aparecia no menu
+- **Causa**: Query usava `eq(padronizacaoReads.id, sql\`NULL\`)` ao invés de `isNull()`
+- **Solução**: Substituído por `isNull(padronizacaoReads.id)` para verificar corretamente LEFT JOIN sem match
+- **Arquivos alterados**: `server/db-padronizacao.ts`
+- **Status**: ✅ Corrigido
+- **Resultado**: Badge agora mostra corretamente quantidade de termos novos/atualizados nos últimos 30 dias
+
+---
+
 ### 🐛 Correções Críticas
 
 #### Estatísticas Vazias no Perfil DIRETOR
