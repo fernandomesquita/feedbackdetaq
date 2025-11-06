@@ -1,0 +1,18 @@
+{
+  "query": "SHOW COLUMNS FROM feedbacks WHERE Field = 'rating'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SHOW COLUMNS FROM feedbacks WHERE Field = 'rating'",
+  "rows": [
+    {
+      "Field": "rating",
+      "Type": "int(11)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nrating\tint(11)\tYES\t\tNULL\t\n",
+  "stderr": "",
+  "execution_time_ms": 48
+}

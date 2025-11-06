@@ -41,6 +41,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ### 🐛 Correções de Bugs
 
+#### Erro de Insert em Feedbacks (Rating Decimal)
+- **Problema**: Inserção falhando quando rating é decimal (ex: 3.5)
+- **Causa**: Campo rating é INT no banco mas aceita decimais no frontend
+- **Solução**: Adicionado Math.round() para arredondar rating antes de enviar
+- **Arquivos alterados**: `client/src/pages/FeedbackNew.tsx`
+- **Status**: ✅ Corrigido
+
 #### Erro de Insert em Feedbacks (Campo content NOT NULL)
 - **Problema**: Inserção de feedback falhando quando content é vazio
 - **Causa**: Campo content definido como NOT NULL no banco

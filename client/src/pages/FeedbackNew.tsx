@@ -57,7 +57,7 @@ export default function FeedbackNew() {
       type: formData.type,
       title: formData.title || undefined,
       content: formData.content,
-      rating: formData.rating > 0 ? formData.rating : undefined,
+      rating: formData.rating > 0 ? Math.round(formData.rating) : undefined,
       sessionType: formData.sessionType && formData.sessionType !== "NONE" ? formData.sessionType : undefined,
       sessionNum: formData.sessionNum || undefined,
       imageUrl: formData.imageUrl || undefined,
