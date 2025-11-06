@@ -32,8 +32,8 @@ const menuItems = [
   { icon: MessageSquare, label: "Feedbacks", path: "/feedbacks", roles: [] },
   { icon: Bell, label: "Avisos", path: "/avisos", roles: [] },
   { icon: BookOpen, label: "Padronização", path: "/padronizacao", roles: [] },
-  { icon: BarChart3, label: "Estatísticas", path: "/statistics", roles: ["MASTER", "DIRETOR"] },
-  { icon: Users, label: "Usuários", path: "/users", roles: ["MASTER", "DIRETOR"] },
+  { icon: BarChart3, label: "Estatísticas", path: "/estatisticas", roles: ["MASTER", "DIRETOR"] },
+  { icon: Users, label: "Usuários", path: "/usuarios", roles: ["MASTER"] },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";

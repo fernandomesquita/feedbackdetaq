@@ -320,3 +320,4 @@
 - [x] Criar tabelas faltantes no banco de dados
 - [x] Corrigir campo definition para aceitar NULL em padronizacao
 - [x] Atualizar CHANGELOG.md com correções
+- [x] Corrigir rotas do menu (statistics → estatisticas, users → usuarios)

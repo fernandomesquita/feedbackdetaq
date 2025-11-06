@@ -42,6 +42,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 - **Arquivos alterados**: Banco de dados
 - **Status**: ✅ Corrigido
 
+#### Erro 404 em Estatísticas e Usuários
+- **Problema**: Links do menu apontam para `/statistics` e `/users` mas rotas são `/estatisticas` e `/usuarios`
+- **Causa**: Inconsistência entre rotas em português no App.tsx e links em inglês no DashboardLayout
+- **Solução**: Corrigidos paths no menuItems do DashboardLayout para usar rotas em português
+- **Arquivos alterados**: `client/src/components/DashboardLayout.tsx`
+- **Status**: ✅ Corrigido
+
 ---
 
 ## [1.0.0] - 2025-11-06
