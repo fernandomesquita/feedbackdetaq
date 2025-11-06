@@ -54,31 +54,44 @@ export async function getFeedbackStats() {
       .from(feedbacks)
       .groupBy(feedbacks.isRead);
 
+    // Converter count para number (pode vir como string do MySQL)
+    const byTypeFormatted = byType.map(item => ({
+      type: item.type,
+      count: typeof item.count === 'string' ? parseInt(item.count, 10) : item.count
+    }));
+
+    const byReadStatusFormatted = byReadStatus.map(item => ({
+      isRead: item.isRead,
+      count: typeof item.count === 'string' ? parseInt(item.count, 10) : item.count
+    }));
+
     // Feedbacks por mês (últimos 6 meses)
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-    const byMonth = await db
-      .select({
-        month: sql<string>`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`,
-        count: sql<number>`COUNT(*)`
-      })
-      .from(feedbacks)
-      .where(gte(feedbacks.createdAt, sixMonthsAgo))
-      .groupBy(sql`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`)
-      .orderBy(sql`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`);
+    const byMonthResult: any = await db.execute(
+      sql`SELECT DATE_FORMAT(createdAt, '%Y-%m') as month, COUNT(*) as count 
+          FROM feedbacks 
+          WHERE createdAt >= ${sixMonthsAgo} 
+          GROUP BY month 
+          ORDER BY month`
+    );
+
+    const byMonth = byMonthResult[0] || [];
 
     // Converter count de string para number
-    const byMonthFormatted = byMonth.map(item => ({
+    const byMonthFormatted = byMonth.map((item: any) => ({
       month: item.month,
       count: typeof item.count === 'string' ? parseInt(item.count, 10) : item.count
     }));
 
-    return {
-      byType,
-      byReadStatus,
+    const result = {
+      byType: byTypeFormatted,
+      byReadStatus: byReadStatusFormatted,
       byMonth: byMonthFormatted,
     };
+
+    return result;
   } catch (error) {
     console.error('Error fetching feedback stats:', error);
     return {

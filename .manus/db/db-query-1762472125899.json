@@ -1,0 +1,14 @@
+{
+  "query": "SELECT DATE_FORMAT(createdAt, '%Y-%m') as month, COUNT(*) as count FROM feedbacks WHERE createdAt >= DATE_SUB(NOW(), INTERVAL 6 MONTH) GROUP BY month ORDER BY month",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT DATE_FORMAT(createdAt, '%Y-%m') as month, COUNT(*) as count FROM feedbacks WHERE createdAt >= DATE_SUB(NOW(), INTERVAL 6 MONTH) GROUP BY month ORDER BY month",
+  "rows": [
+    {
+      "month": "2025-11",
+      "count": "6"
+    }
+  ],
+  "messages": [],
+  "stdout": "month\tcount\n2025-11\t6\n",
+  "stderr": "",
+  "execution_time_ms": 49
+}

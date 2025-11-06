@@ -61,11 +61,6 @@ export default function Estatisticas() {
     value: item.count,
   })) || [];
 
-  // Debug
-  console.log('feedbackStats:', feedbackStats);
-  console.log('feedbackTypeData:', feedbackTypeData);
-  console.log('feedbackReadData:', feedbackReadData);
-
   const monthlyData = feedbackStats?.byMonth.map((item: any) => ({
     month: item.month,
     feedbacks: item.count,

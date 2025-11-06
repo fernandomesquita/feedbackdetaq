@@ -175,3 +175,6 @@
 - [x] Verificar logs de erro no console do navegador
 - [x] Verificar se a API de estatísticas está retornando dados
 - [x] Corrigir problema de renderização dos gráficos (count() -> COUNT(*) em byType e byReadStatus)
+- [x] Corrigir query byMonth com GROUP BY usando alias ao invés de expressão completa
+- [x] Usar db.execute() com raw SQL para byMonth para evitar problemas de GROUP BY
+- [x] Converter count para number em todas as queries (MySQL retorna string)
