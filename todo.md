@@ -340,3 +340,4 @@
 - [x] Criar API de login local (auth.loginLocal)
 - [x] Atualizar rotas para redirecionar para /login
 - [x] Corrigir senhas dos usuários de teste (executar update-passwords.ts)
+- [x] Corrigir erro de SelectItem com value vazio em FeedbackNew.tsx

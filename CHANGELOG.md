@@ -41,6 +41,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ### 🐛 Correções de Bugs
 
+#### Erro de SelectItem com Value Vazio
+- **Problema**: SelectItem com value="" causando erro no Radix UI
+- **Causa**: Radix Select não permite value vazio
+- **Solução**: Alterado value de "" para "NONE" e tratamento no submit
+- **Arquivos alterados**: `client/src/pages/FeedbackNew.tsx`
+- **Status**: ✅ Corrigido
+
 #### Senhas de Usuários de Teste Não Funcionando
 - **Problema**: Usuários de teste criados sem senha (campo NULL)
 - **Causa**: Script de seed executado antes do campo password existir na tabela

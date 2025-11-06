@@ -21,10 +21,10 @@ export default function FeedbackNew() {
     title: "",
     content: "",
     rating: 0,
-    sessionType: "" as "" | "PLENARIO" | "COMISSAO",
+    sessionType: "" as "PLENARIO" | "COMISSAO" | "NONE" | "",
     sessionNum: "",
-    taquigId: 0,
     imageUrl: "",
+    taquigId: 0,
   });
 
   // Query para buscar taquígrafos
@@ -58,7 +58,7 @@ export default function FeedbackNew() {
       title: formData.title || undefined,
       content: formData.content,
       rating: formData.rating > 0 ? formData.rating : undefined,
-      sessionType: formData.sessionType || undefined,
+      sessionType: formData.sessionType && formData.sessionType !== "NONE" ? formData.sessionType : undefined,
       sessionNum: formData.sessionNum || undefined,
       imageUrl: formData.imageUrl || undefined,
       taquigId: formData.taquigId,
@@ -169,7 +169,7 @@ export default function FeedbackNew() {
                       <SelectValue placeholder="Selecione..." />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">Nenhuma</SelectItem>
+                      <SelectItem value="NONE">Nenhuma</SelectItem>
                       <SelectItem value="PLENARIO">Plenário</SelectItem>
                       <SelectItem value="COMISSAO">Comissão</SelectItem>
                     </SelectContent>
