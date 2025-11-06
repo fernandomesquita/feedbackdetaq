@@ -8,6 +8,34 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ## [Em Desenvolvimento] - 2025-11-06
 
+### 🐛 Correções Críticas
+
+#### Estatísticas Vazias no Perfil DIRETOR
+- **Problema**: Gráficos de estatísticas não carregavam (mostravam "Nenhum dado disponível")
+- **Causa Raiz**: Múltiplos problemas de SQL com MySQL strict mode (`only_full_group_by`)
+- **Soluções Aplicadas**:
+  1. Substituído `count()` do Drizzle ORM por `sql\`COUNT(*)\`` em queries `byType` e `byReadStatus`
+  2. Reescrita query `byMonth` usando `db.execute()` com raw SQL e `GROUP BY month` (alias) ao invés de `GROUP BY DATE_FORMAT(...)`
+  3. Adicionada conversão explícita de `count` para `number` (MySQL retorna string)
+  4. Adicionadas mensagens "Nenhum dado disponível" quando arrays estão vazios
+- **Arquivos alterados**: `server/db-statistics.ts`, `client/src/pages/Estatisticas.tsx`
+- **Status**: ✅ Corrigido
+- **Resultado**: Gráficos agora carregam corretamente mostrando distribuição de feedbacks por tipo, status de leitura e evolução mensal
+
+#### Contagem de Avisos Ativos no Dashboard
+- **Problema**: Card "Avisos Ativos" mostrava 0 quando havia avisos visíveis
+- **Causa**: Usava `avisos?.length` ao invés de `visibleAvisos.length` (avisos filtrados por público-alvo)
+- **Solução**: Corrigida contagem para usar array de avisos filtrados
+- **Arquivos alterados**: `client/src/pages/Dashboard.tsx`
+- **Status**: ✅ Corrigido
+
+#### Busca por Número de Sessão
+- **Funcionalidade**: Permitir busca de feedbacks pelo número da sessão
+- **Implementação**: Campo `sessionNum` adicionado ao filtro de busca em todas as views (taquígrafo, revisor, administrador)
+- **Exemplo**: Buscar por "77998" encontra feedbacks da "COMISSÃO 77998-25"
+- **Arquivos alterados**: `server/db-feedbacks.ts`
+- **Status**: ✅ Implementado
+
 ### ✨ Novas Funcionalidades
 
 #### Sistema de Notificações para Termos Padronizados
