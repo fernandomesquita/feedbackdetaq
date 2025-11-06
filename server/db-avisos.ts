@@ -204,3 +204,88 @@ export async function getAvisosWithReadStatus(userId: number) {
 
   return result;
 }
+
+
+/**
+ * VISUALIZAÇÕES DE AVISOS (para estatísticas)
+ */
+
+import { avisoViews } from "../drizzle/schema";
+import { count, inArray } from "drizzle-orm";
+
+export async function recordAvisoView(avisoId: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Registrar visualização (pode haver múltiplas visualizações do mesmo usuário)
+  await db.insert(avisoViews).values({ avisoId, userId });
+}
+
+export async function getAvisoViewStats(avisoId: number) {
+  const db = await getDb();
+  if (!db) return { totalViews: 0, uniqueUsers: 0, viewsByUser: [] };
+
+  // Total de visualizações
+  const totalResult = await db
+    .select({ count: count() })
+    .from(avisoViews)
+    .where(eq(avisoViews.avisoId, avisoId));
+
+  // Usuários únicos
+  const uniqueResult = await db
+    .select({ userId: avisoViews.userId })
+    .from(avisoViews)
+    .where(eq(avisoViews.avisoId, avisoId))
+    .groupBy(avisoViews.userId);
+
+  // Visualizações por usuário com nomes
+  const viewsByUserResult = await db
+    .select({
+      userId: avisoViews.userId,
+      userName: users.name,
+      viewCount: count(),
+      lastViewedAt: sql<Date>`MAX(${avisoViews.viewedAt})`,
+    })
+    .from(avisoViews)
+    .leftJoin(users, eq(avisoViews.userId, users.id))
+    .where(eq(avisoViews.avisoId, avisoId))
+    .groupBy(avisoViews.userId, users.name);
+
+  return {
+    totalViews: totalResult[0]?.count || 0,
+    uniqueUsers: uniqueResult.length,
+    viewsByUser: viewsByUserResult,
+  };
+}
+
+export async function getActiveAvisosWithStats() {
+  const db = await getDb();
+  if (!db) return [];
+
+  // Pegar todos os avisos ativos
+  const activeAvisos = await db
+    .select({
+      id: avisos.id,
+      title: avisos.title,
+      content: avisos.content,
+      type: avisos.type,
+      publishAt: avisos.publishAt,
+      createdAt: avisos.createdAt,
+      userId: avisos.userId,
+      creatorName: users.name,
+    })
+    .from(avisos)
+    .leftJoin(users, eq(avisos.userId, users.id))
+    .where(and(eq(avisos.isActive, true), lte(avisos.publishAt, new Date())))
+    .orderBy(desc(avisos.createdAt));
+
+  // Para cada aviso, pegar estatísticas
+  const avisosWithStats = await Promise.all(
+    activeAvisos.map(async (aviso) => {
+      const stats = await getAvisoViewStats(aviso.id);
+      return { ...aviso, ...stats };
+    })
+  );
+
+  return avisosWithStats;
+}

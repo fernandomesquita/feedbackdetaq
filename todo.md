@@ -352,3 +352,19 @@
 - [x] Organizar termos em seções alfabéticas com letras grandes
 - [x] Remover boxes grandes, mostrar apenas os termos
 - [x] Implementar layout em colunas para melhor aproveitamento do espaço
+
+## NOVAS FUNCIONALIDADES (06/11/2025 - 21:10)
+- [x] Adicionar tabela padronizacao_reads para rastrear leitura de termos
+- [x] Criar campo updatedAt em padronizacao para detectar atualizações (já existia)
+- [x] Criar API para contar termos não lidos
+- [x] Criar API para marcar termos como lidos
+- [x] Adicionar badge vermelho de notificação no menu Padronização
+- [x] Implementar contador de termos novos/atualizados
+- [x] Criar componente de avisos no topo do dashboard
+- [x] Adicionar botão de dispensar aviso
+- [x] Criar tabela aviso_views para rastrear visualizações
+- [x] Criar API para registrar visualização de aviso
+- [x] Criar API para obter estatísticas de visualização
+- [x] Exibir estatísticas de visualização para MASTER/DIRETOR
+- [x] Testar sistema de notificações
+- [x] Atualizar CHANGELOG.md

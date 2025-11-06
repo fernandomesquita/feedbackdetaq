@@ -362,6 +362,26 @@ export const appRouter = router({
         const count = await dbAvisos.getUnreadAvisosCount(ctx.user.id);
         return count;
       }),
+
+    recordView: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await dbAvisos.recordAvisoView(input.id, ctx.user.id);
+        return { success: true };
+      }),
+
+    getViewStats: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const stats = await dbAvisos.getAvisoViewStats(input.id);
+        return stats;
+      }),
+
+    listWithStats: protectedProcedure
+      .query(async () => {
+        const avisos = await dbAvisos.getActiveAvisosWithStats();
+        return avisos;
+      }),
   }),
 
   padronizacao: router({
@@ -415,6 +435,25 @@ export const appRouter = router({
       .query(async ({ input }) => {
         const results = await dbPadronizacao.searchPadronizacao(input.query);
         return results;
+      }),
+
+    getUnreadCount: protectedProcedure
+      .query(async ({ ctx }) => {
+        const count = await dbPadronizacao.getUnreadPadronizacaoCount(ctx.user.id);
+        return count;
+      }),
+
+    markAsRead: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await dbPadronizacao.markPadronizacaoAsRead(input.id, ctx.user.id);
+        return { success: true };
+      }),
+
+    markAllAsRead: protectedProcedure
+      .mutation(async ({ ctx }) => {
+        await dbPadronizacao.markAllPadronizacaoAsRead(ctx.user.id);
+        return { success: true };
       }),
   }),
 

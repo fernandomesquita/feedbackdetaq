@@ -6,7 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Search, Pencil, Trash2, BookOpen } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 
@@ -19,6 +19,18 @@ export default function Padronizacao() {
 
   const utils = trpc.useUtils();
   const { data: terms = [], isLoading } = trpc.padronizacao.list.useQuery();
+  const markAllAsReadMutation = trpc.padronizacao.markAllAsRead.useMutation({
+    onSuccess: () => {
+      utils.padronizacao.getUnreadCount.invalidate();
+    },
+  });
+
+  // Marcar todos como lidos ao entrar na página
+  useEffect(() => {
+    if (!isLoading && terms.length > 0) {
+      markAllAsReadMutation.mutate();
+    }
+  }, [isLoading]);
   
   const createMutation = trpc.padronizacao.create.useMutation({
     onSuccess: () => {

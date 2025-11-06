@@ -162,6 +162,23 @@ export type AvisoRead = typeof avisoReads.$inferSelect;
 export type InsertAvisoRead = typeof avisoReads.$inferInsert;
 
 /**
+ * TABELA DE VISUALIZAÇÕES DE AVISOS (para estatísticas)
+ */
+export const avisoViews = mysqlTable("aviso_views", {
+  id: int("id").autoincrement().primaryKey(),
+  avisoId: int("avisoId").notNull(),
+  userId: int("userId").notNull(),
+  viewedAt: timestamp("viewedAt").defaultNow().notNull(),
+}, (table) => ({
+  avisoIdx: index("aviso_idx").on(table.avisoId),
+  userIdx: index("user_idx").on(table.userId),
+  viewedAtIdx: index("viewed_at_idx").on(table.viewedAt),
+}));
+
+export type AvisoView = typeof avisoViews.$inferSelect;
+export type InsertAvisoView = typeof avisoViews.$inferInsert;
+
+/**
  * TABELA DE PADRONIZAÇÃO
  */
 export const padronizacao = mysqlTable("padronizacao", {
@@ -177,6 +194,23 @@ export const padronizacao = mysqlTable("padronizacao", {
 
 export type Padronizacao = typeof padronizacao.$inferSelect;
 export type InsertPadronizacao = typeof padronizacao.$inferInsert;
+
+/**
+ * TABELA DE LEITURA DE PADRONIZAÇÃO
+ */
+export const padronizacaoReads = mysqlTable("padronizacao_reads", {
+  id: int("id").autoincrement().primaryKey(),
+  padronizacaoId: int("padronizacaoId").notNull(),
+  userId: int("userId").notNull(),
+  readAt: timestamp("readAt").defaultNow().notNull(),
+}, (table) => ({
+  padronizacaoUserUnique: unique("padronizacao_user_unique").on(table.padronizacaoId, table.userId),
+  padronizacaoIdx: index("padronizacao_idx").on(table.padronizacaoId),
+  userIdx: index("user_idx").on(table.userId),
+}));
+
+export type PadronizacaoRead = typeof padronizacaoReads.$inferSelect;
+export type InsertPadronizacaoRead = typeof padronizacaoReads.$inferInsert;
 
 /**
  * TABELA DE TEMPLATES
@@ -286,6 +320,7 @@ export const avisosRelations = relations(avisos, ({ one, many }) => ({
     references: [users.id],
   }),
   readBy: many(avisoReads),
+  views: many(avisoViews),
 }));
 
 export const avisoReadsRelations = relations(avisoReads, ({ one }) => ({
@@ -293,11 +328,38 @@ export const avisoReadsRelations = relations(avisoReads, ({ one }) => ({
     fields: [avisoReads.avisoId],
     references: [avisos.id],
   }),
+  user: one(users, {
+    fields: [avisoReads.userId],
+    references: [users.id],
+  }),
 }));
 
-export const padronizacaoRelations = relations(padronizacao, ({ one }) => ({
+export const avisoViewsRelations = relations(avisoViews, ({ one }) => ({
+  aviso: one(avisos, {
+    fields: [avisoViews.avisoId],
+    references: [avisos.id],
+  }),
+  user: one(users, {
+    fields: [avisoViews.userId],
+    references: [users.id],
+  }),
+}));
+
+export const padronizacaoRelations = relations(padronizacao, ({ one, many }) => ({
   creator: one(users, {
     fields: [padronizacao.userId],
+    references: [users.id],
+  }),
+  readBy: many(padronizacaoReads),
+}));
+
+export const padronizacaoReadsRelations = relations(padronizacaoReads, ({ one }) => ({
+  padronizacao: one(padronizacao, {
+    fields: [padronizacaoReads.padronizacaoId],
+    references: [padronizacao.id],
+  }),
+  user: one(users, {
+    fields: [padronizacaoReads.userId],
     references: [users.id],
   }),
 }));

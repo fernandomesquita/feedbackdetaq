@@ -3,7 +3,7 @@ import { useAuthWithProfile } from "@/hooks/useAuthWithProfile";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bell, Plus, AlertCircle, Clock, RefreshCw, Eye, CheckCircle2 } from "lucide-react";
+import { Bell, Plus, AlertCircle, Clock, RefreshCw, Eye, CheckCircle2, Users, TrendingUp } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { useState } from "react";
 import { format } from "date-fns";
@@ -39,6 +39,9 @@ export default function Avisos() {
 
   const { data: avisos, isLoading } = trpc.avisos.list.useQuery();
   const { data: unreadCount } = trpc.avisos.getUnreadCount.useQuery();
+  const { data: avisosWithStats } = trpc.avisos.listWithStats.useQuery(undefined, {
+    enabled: canCreate, // Apenas para MASTER/DIRETOR
+  });
 
   const markAsReadMutation = trpc.avisos.markAsRead.useMutation({
     onSuccess: () => {
@@ -174,11 +177,31 @@ export default function Avisos() {
                         <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                           {aviso.content}
                         </p>
-                        {aviso.creatorName && (
-                          <p className="text-xs text-muted-foreground mt-3">
-                            Publicado por: {aviso.creatorName}
-                          </p>
-                        )}
+                        <div className="flex items-center justify-between mt-3">
+                          {aviso.creatorName && (
+                            <p className="text-xs text-muted-foreground">
+                              Publicado por: {aviso.creatorName}
+                            </p>
+                          )}
+                          {canCreate && avisosWithStats && (() => {
+                            const stats = avisosWithStats.find((a: any) => a.id === aviso.id);
+                            if (stats) {
+                              return (
+                                <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                                  <div className="flex items-center gap-1">
+                                    <Users className="h-3 w-3" />
+                                    <span>{stats.uniqueUsers} usuário{stats.uniqueUsers !== 1 ? 's' : ''}</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <TrendingUp className="h-3 w-3" />
+                                    <span>{stats.totalViews} visualizaçõe{stats.totalViews !== 1 ? 's' : ''}</span>
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </div>
                       </CardContent>
                     </Card>
                   );

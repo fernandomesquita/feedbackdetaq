@@ -2,11 +2,59 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { useAuthWithProfile } from "@/hooks/useAuthWithProfile";
 import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Bell, BookOpen, TrendingUp } from "lucide-react";
+import { MessageSquare, Bell, BookOpen, TrendingUp, X, AlertCircle, Info, Repeat } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useState, useEffect } from "react";
 
 export default function Dashboard() {
   const { user, feedbackRole } = useAuthWithProfile();
   const { data: feedbackCount = 0 } = trpc.feedbacks.count.useQuery();
+  const { data: avisos = [] } = trpc.avisos.list.useQuery();
+  const [dismissedAvisos, setDismissedAvisos] = useState<number[]>([]);
+  const utils = trpc.useUtils();
+  
+  const recordViewMutation = trpc.avisos.recordView.useMutation();
+  const markAsReadMutation = trpc.avisos.markAsRead.useMutation({
+    onSuccess: () => {
+      utils.avisos.list.invalidate();
+    },
+  });
+
+  // Registrar visualização dos avisos não lidos ao carregar o dashboard
+  useEffect(() => {
+    const unreadAvisos = avisos.filter((a: any) => !a.isRead);
+    unreadAvisos.forEach((aviso: any) => {
+      recordViewMutation.mutate({ id: aviso.id });
+    });
+  }, [avisos.length]);
+
+  const handleDismiss = (avisoId: number) => {
+    setDismissedAvisos([...dismissedAvisos, avisoId]);
+    markAsReadMutation.mutate({ id: avisoId });
+  };
+
+  const activeAvisos = avisos.filter((a: any) => !dismissedAvisos.includes(a.id) && !a.isRead);
+
+  const getAvisoIcon = (type: string) => {
+    switch (type) {
+      case "URGENTE":
+        return <AlertCircle className="h-5 w-5" />;
+      case "RECORRENTE":
+        return <Repeat className="h-5 w-5" />;
+      default:
+        return <Info className="h-5 w-5" />;
+    }
+  };
+
+  const getAvisoVariant = (type: string) => {
+    switch (type) {
+      case "URGENTE":
+        return "destructive";
+      default:
+        return "default";
+    }
+  };
 
   const getRoleLabel = (role: string | null) => {
     const labels: Record<string, string> = {
@@ -29,6 +77,31 @@ export default function Dashboard() {
             <span className="font-medium">{getRoleLabel(feedbackRole)}</span>.
           </p>
         </div>
+
+        {/* Avisos no Topo */}
+        {activeAvisos.length > 0 && (
+          <div className="space-y-3">
+            {activeAvisos.map((aviso: any) => (
+              <Alert key={aviso.id} variant={getAvisoVariant(aviso.type)} className="relative">
+                <div className="flex items-start gap-3">
+                  {getAvisoIcon(aviso.type)}
+                  <div className="flex-1">
+                    <AlertTitle className="mb-1">{aviso.title}</AlertTitle>
+                    <AlertDescription>{aviso.content}</AlertDescription>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 shrink-0"
+                    onClick={() => handleDismiss(aviso.id)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              </Alert>
+            ))}
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">

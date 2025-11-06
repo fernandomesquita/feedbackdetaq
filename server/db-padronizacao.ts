@@ -105,3 +105,61 @@ export async function searchPadronizacao(query: string) {
 
   return result;
 }
+
+/**
+ * RASTREAMENTO DE LEITURA DE PADRONIZAÇÃO
+ */
+
+import { padronizacaoReads } from "../drizzle/schema";
+import { and, count, sql, gt } from "drizzle-orm";
+
+export async function markPadronizacaoAsRead(padronizacaoId: number, userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Inserir ou ignorar se já existe (devido ao UNIQUE constraint)
+  await db
+    .insert(padronizacaoReads)
+    .values({ padronizacaoId, userId })
+    .onDuplicateKeyUpdate({ set: { readAt: sql`NOW()` } });
+}
+
+export async function getUnreadPadronizacaoCount(userId: number, since?: Date) {
+  const db = await getDb();
+  if (!db) return 0;
+
+  // Contar termos criados/atualizados desde uma data que o usuário ainda não leu
+  const sinceDate = since || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000); // 30 dias atrás por padrão
+
+  const result = await db
+    .select({ count: count() })
+    .from(padronizacao)
+    .leftJoin(
+      padronizacaoReads,
+      and(
+        eq(padronizacaoReads.padronizacaoId, padronizacao.id),
+        eq(padronizacaoReads.userId, userId)
+      )
+    )
+    .where(
+      and(
+        gt(padronizacao.updatedAt, sinceDate),
+        eq(padronizacaoReads.id, sql`NULL`) // Não lido
+      )
+    );
+
+  return result[0]?.count || 0;
+}
+
+export async function markAllPadronizacaoAsRead(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Pegar todos os termos
+  const allTerms = await db.select({ id: padronizacao.id }).from(padronizacao);
+
+  // Marcar todos como lidos
+  for (const term of allTerms) {
+    await markPadronizacaoAsRead(term.id, userId);
+  }
+}

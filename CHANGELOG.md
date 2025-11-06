@@ -8,6 +8,35 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ## [Em Desenvolvimento] - 2025-11-06
 
+### ✨ Novas Funcionalidades
+
+#### Sistema de Notificações para Termos Padronizados
+- **Funcionalidade**: Badge vermelho no menu com contador de termos novos/atualizados
+- **Implementação**:
+  - Tabela `padronizacao_reads` para rastrear leitura de termos por usuário
+  - API `padronizacao.getUnreadCount` para contar termos não lidos (novos ou atualizados nos últimos 30 dias)
+  - API `padronizacao.markAsRead` para marcar termo individual como lido
+  - API `padronizacao.markAllAsRead` para marcar todos os termos como lidos
+  - Badge vermelho estilo notificação mobile no menu lateral (item Padronização)
+  - Contador atualizado a cada 30 segundos automaticamente
+  - Marcação automática como lido ao entrar na página de Padronização
+- **Arquivos alterados**: `drizzle/schema.ts`, `server/db-padronizacao.ts`, `server/routers.ts`, `client/src/components/DashboardLayout.tsx`, `client/src/pages/Padronizacao.tsx`
+- **Status**: ✅ Implementado
+
+#### Avisos no Topo do Dashboard com Estatísticas
+- **Funcionalidade**: Avisos aparecem no topo do dashboard até serem dispensados, com estatísticas de visualização
+- **Implementação**:
+  - Tabela `aviso_views` para rastrear visualizações de avisos (permite múltiplas visualizações)
+  - API `avisos.recordView` para registrar visualização de aviso
+  - API `avisos.getViewStats` para obter estatísticas de um aviso (total de visualizações, usuários únicos, visualizações por usuário)
+  - API `avisos.listWithStats` para listar avisos com estatísticas (apenas MASTER/DIRETOR)
+  - Avisos não lidos aparecem no topo do dashboard com ícones por tipo (Cotidiano, Urgente, Recorrente)
+  - Botão X para dispensar aviso (marca como lido)
+  - Registro automático de visualização ao carregar dashboard
+  - Estatísticas visíveis para MASTER/DIRETOR na página de Avisos (usuários únicos e total de visualizações)
+- **Arquivos alterados**: `drizzle/schema.ts`, `server/db-avisos.ts`, `server/routers.ts`, `client/src/pages/Dashboard.tsx`, `client/src/pages/Avisos.tsx`
+- **Status**: ✅ Implementado
+
 ### 🎨 Melhorias de UI/UX
 
 #### Redesign da Página de Padronização
