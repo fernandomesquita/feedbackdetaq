@@ -37,6 +37,17 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 - **Arquivos alterados**: `drizzle/schema.ts`, `server/db-avisos.ts`, `server/routers.ts`, `client/src/pages/Dashboard.tsx`, `client/src/pages/Avisos.tsx`
 - **Status**: ✅ Implementado
 
+#### Segmentação de Avisos por Público-Alvo
+- **Funcionalidade**: Avisos podem ser direcionados para grupos específicos de usuários
+- **Implementação**:
+  - Campo `targets` (JSON array) já existente no schema de avisos
+  - Opções: TODOS, REVISOR, TAQUIGRAFO
+  - Formulário de criação com checkboxes para seleção de público
+  - Filtragem automática no dashboard baseada no papel do usuário
+  - Campo `targets` adicionado ao retorno da API `avisos.list`
+- **Arquivos alterados**: `server/db-avisos.ts`, `client/src/pages/Dashboard.tsx`, `client/src/pages/AvisoNew.tsx`
+- **Status**: ✅ Implementado
+
 ### 🎨 Melhorias de UI/UX
 
 #### Redesign da Página de Padronização
@@ -49,6 +60,39 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
   - Busca em tempo real mantida
   - Melhor aproveitamento do espaço da tela
 - **Arquivos alterados**: `client/src/pages/Padronizacao.tsx`
+- **Status**: ✅ Implementado
+
+#### Melhorias Visuais dos Avisos no Dashboard
+- **Funcionalidade**: Avisos com cores de fundo por categoria e tipografia melhorada
+- **Implementação**:
+  - Cores de fundo diferenciadas: vermelho claro (URGENTE), roxo claro (RECORRENTE), azul claro (COTIDIANO)
+  - Título aumentado (text-lg) e em negrito
+  - Conteúdo em fonte normal com espaçamento relaxado
+  - Layout customizado com div ao invés de Alert component
+  - Botão X posicionado corretamente no canto superior direito
+  - Hierarquia visual clara entre título e conteúdo
+- **Arquivos alterados**: `client/src/pages/Dashboard.tsx`
+- **Status**: ✅ Implementado
+
+#### Ordenação Alfabética Ignorando Aspas
+- **Funcionalidade**: Termos com aspas são ordenados corretamente no glossário
+- **Implementação**:
+  - Função `removeQuotes()` que remove aspas do início e fim dos termos
+  - Classificação por letra ignora aspas ("Prescrito" vai para P)
+  - Ordenação dentro de cada grupo usa `localeCompare` com termos limpos
+  - Suporte para aspas duplas, simples e curvas
+- **Arquivos alterados**: `client/src/pages/Padronizacao.tsx`
+- **Status**: ✅ Implementado
+
+#### Dashboard Otimizado para Perfil DIRETOR
+- **Funcionalidade**: Dashboard adaptado para perfil administrativo
+- **Implementação**:
+  - Card de Feedbacks removido para perfil DIRETOR (foco administrativo)
+  - Grid ajustado para 3 colunas quando card de Feedbacks não aparece
+  - API `padronizacao.count` criada para retornar total de termos
+  - Card de Termos Padronizados mostra contagem correta
+  - Badge de notificação de novos termos funcional
+- **Arquivos alterados**: `server/routers.ts`, `client/src/pages/Dashboard.tsx`
 - **Status**: ✅ Implementado
 
 ### ✨ Novas Funcionalidades
