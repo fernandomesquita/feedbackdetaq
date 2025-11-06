@@ -388,3 +388,6 @@
 
 ## CORREÇÃO CONTAGEM AVISOS (06/11/2025 - 20:07)
 - [x] Corrigir contagem de avisos ativos no card do dashboard (mostra 0 quando há avisos)
+
+## CORREÇÃO ORDENAÇÃO COM ASPAS (06/11/2025 - 20:09)
+- [x] Ignorar aspas completamente na ordenação alfabética dos termos (não apenas na classificação por letra)

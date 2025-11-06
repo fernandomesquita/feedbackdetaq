@@ -68,15 +68,26 @@ export default function Padronizacao() {
            (term.definition && term.definition.toLowerCase().includes(searchTerm.toLowerCase()));
   });
 
+  // Função para remover aspas de um termo
+  const removeQuotes = (text: string) => text.replace(/^["'“”‘’`]+|["'“”‘’`]+$/g, '');
+
   // Agrupar termos por letra inicial (ignorando aspas)
   const groupedTerms = filteredTerms.reduce((acc: Record<string, typeof terms>, term: any) => {
-    // Remover aspas do início para determinar a letra
-    const cleanTerm = term.term.replace(/^["'""''`]/, '');
+    const cleanTerm = removeQuotes(term.term);
     const firstLetter = cleanTerm[0]?.toUpperCase() || "#";
     if (!acc[firstLetter]) acc[firstLetter] = [];
     acc[firstLetter].push(term);
     return acc;
   }, {});
+
+  // Ordenar termos dentro de cada grupo ignorando aspas
+  Object.keys(groupedTerms).forEach(letter => {
+    groupedTerms[letter].sort((a: any, b: any) => {
+      const cleanA = removeQuotes(a.term).toLowerCase();
+      const cleanB = removeQuotes(b.term).toLowerCase();
+      return cleanA.localeCompare(cleanB);
+    });
+  });
 
   const sortedLetters = Object.keys(groupedTerms).sort();
 
