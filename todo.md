@@ -385,3 +385,6 @@
 - [x] Adicionar campo de público-alvo nos avisos (Revisores, Taquígrafos, Todos)
 - [x] Filtrar avisos exibidos no dashboard baseado no papel do usuário
 - [x] Atualizar formulário de criação de avisos com seleção de público
+
+## CORREÇÃO CONTAGEM AVISOS (06/11/2025 - 20:07)
+- [x] Corrigir contagem de avisos ativos no card do dashboard (mostra 0 quando há avisos)

@@ -150,9 +150,9 @@ export default function Dashboard() {
               <Bell className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">{filteredByTarget.length}</div>
               <p className="text-xs text-muted-foreground">
-                Nenhum aviso no momento
+                {filteredByTarget.length === 0 ? "Nenhum aviso no momento" : `${filteredByTarget.length} aviso${filteredByTarget.length > 1 ? 's' : ''} ativo${filteredByTarget.length > 1 ? 's' : ''}`}
               </p>
             </CardContent>
           </Card>
