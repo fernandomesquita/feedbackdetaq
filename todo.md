@@ -230,3 +230,16 @@
 - [x] Implementar exclusão de termo
 - [x] Exibir lista de termos ordenada alfabeticamente
 - [x] Mostrar informações do criador e data
+
+## FASE 9: Estatísticas e Relatórios (3-4 dias) - CONCLUÍDA
+- [x] Criar helpers de banco para estatísticas (general, feedbacks, byTaquigrafo, byRevisor, topTaquigrafos, topRevisores, reactions, averageRating)
+- [x] Criar APIs tRPC para estatísticas
+- [x] Instalar recharts para gráficos
+- [x] Criar página de Estatísticas com dashboard
+- [x] Implementar cards de métricas gerais
+- [x] Criar gráfico de pizza para feedbacks por tipo
+- [x] Criar gráfico de barras para status de leitura
+- [x] Criar gráfico de linha para evolução mensal
+- [x] Criar gráfico de pizza para reações
+- [x] Implementar índice de qualidade (média de avaliação)
+- [x] Criar rankings de top taquígrafos e revisores (apenas MASTER/DIRETOR)

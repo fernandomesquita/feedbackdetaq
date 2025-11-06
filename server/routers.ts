@@ -8,6 +8,7 @@ import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum, reactionTypeEnum, 
 import * as dbComments from "./db-comments";
 import * as dbAvisos from "./db-avisos";
 import * as dbPadronizacao from "./db-padronizacao";
+import * as dbStatistics from "./db-statistics";
 
 export const appRouter = router({
   system: systemRouter,
@@ -317,7 +318,57 @@ export const appRouter = router({
   }),
 
   statistics: router({
-    // TODO: implementar rotas de estatísticas
+    general: protectedProcedure
+      .query(async () => {
+        const stats = await dbStatistics.getGeneralStats();
+        return stats;
+      }),
+
+    feedbacks: protectedProcedure
+      .query(async () => {
+        const stats = await dbStatistics.getFeedbackStats();
+        return stats;
+      }),
+
+    byTaquigrafo: protectedProcedure
+      .input(z.object({ taquigId: z.number() }))
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getStatsByTaquigrafo(input.taquigId);
+        return stats;
+      }),
+
+    byRevisor: protectedProcedure
+      .input(z.object({ revisorId: z.number() }))
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getStatsByRevisor(input.revisorId);
+        return stats;
+      }),
+
+    topTaquigrafos: protectedProcedure
+      .input(z.object({ limit: z.number().optional() }))
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getTopTaquigrafos(input.limit);
+        return stats;
+      }),
+
+    topRevisores: protectedProcedure
+      .input(z.object({ limit: z.number().optional() }))
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getTopRevisores(input.limit);
+        return stats;
+      }),
+
+    reactions: protectedProcedure
+      .query(async () => {
+        const stats = await dbStatistics.getReactionStats();
+        return stats;
+      }),
+
+    averageRating: protectedProcedure
+      .query(async () => {
+        const stats = await dbStatistics.getAverageRating();
+        return stats;
+      }),
   }),
 
 
