@@ -4,8 +4,9 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
-import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum, reactionTypeEnum } from "../drizzle/schema";
+import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum, reactionTypeEnum, avisoTypeEnum } from "../drizzle/schema";
 import * as dbComments from "./db-comments";
+import * as dbAvisos from "./db-avisos";
 
 export const appRouter = router({
   system: systemRouter,
@@ -193,7 +194,71 @@ export const appRouter = router({
   }),
 
   avisos: router({
-    // TODO: implementar rotas de avisos
+    create: protectedProcedure
+      .input(z.object({
+        title: z.string().min(1),
+        content: z.string().min(1),
+        type: z.enum(avisoTypeEnum),
+        targets: z.array(z.string()).optional(),
+        publishAt: z.date().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await dbAvisos.createAviso({
+          ...input,
+          targets: input.targets || [],
+          userId: ctx.user.id,
+        });
+        return { success: true };
+      }),
+
+    list: protectedProcedure
+      .query(async ({ ctx }) => {
+        const avisos = await dbAvisos.getAvisosWithReadStatus(ctx.user.id);
+        return avisos;
+      }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const aviso = await dbAvisos.getAvisoById(input.id);
+        return aviso;
+      }),
+
+    markAsRead: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await dbAvisos.markAvisoAsRead(input.id, ctx.user.id);
+        return { success: true };
+      }),
+
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        title: z.string().optional(),
+        content: z.string().optional(),
+        type: z.enum(avisoTypeEnum).optional(),
+        isActive: z.boolean().optional(),
+        targets: z.array(z.string()).optional(),
+        publishAt: z.date().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await dbAvisos.updateAviso(id, data);
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await dbAvisos.deleteAviso(input.id);
+        return { success: true };
+      }),
+
+    getUnreadCount: protectedProcedure
+      .query(async ({ ctx }) => {
+        const count = await dbAvisos.getUnreadAvisosCount(ctx.user.id);
+        return count;
+      }),
   }),
 
   padronizacao: router({

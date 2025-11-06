@@ -208,3 +208,14 @@
 - [x] Integrar componentes na página de detalhes do feedback
 - [x] Implementar sistema de toggle para reações
 - [x] Exibir contadores e usuários que reagiram
+
+## FASE 7: Sistema de Avisos (2-3 dias) - CONCLUÍDA
+- [x] Criar helpers de banco para avisos (create, list, getById, update, delete, getByType)
+- [x] Criar helpers para leitura de avisos (markAsRead, isRead, getUnreadCount, getWithReadStatus)
+- [x] Criar APIs tRPC para avisos (create, list, getById, markAsRead, update, delete, getUnreadCount)
+- [x] Criar página de listagem de avisos com filtros por tipo
+- [x] Separar avisos lidos e não lidos
+- [x] Criar página de criação de aviso (apenas MASTER/DIRETOR)
+- [x] Implementar marcação de leitura
+- [x] Exibir contador de avisos não lidos
+- [x] Adicionar badges coloridos por tipo (Cotidiano, Urgente, Recorrente)
