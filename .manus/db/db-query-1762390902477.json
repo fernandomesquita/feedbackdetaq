@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS `padronizacao` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `term` varchar(255) NOT NULL,\n  `definition` text NOT NULL,\n  `userId` int NOT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT (now()),\n  `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `padronizacao_id` PRIMARY KEY(`id`),\n  KEY `padronizacao_term_idx` (`term`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute CREATE TABLE IF NOT EXISTS `padronizacao` (\n  `id` int AUTO_INCREMENT NOT NULL,\n  `term` varchar(255) NOT NULL,\n  `definition` text NOT NULL,\n  `userId` int NOT NULL,\n  `createdAt` timestamp NOT NULL DEFAULT (now()),\n  `updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,\n  CONSTRAINT `padronizacao_id` PRIMARY KEY(`id`),\n  KEY `padronizacao_term_idx` (`term`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 174
+}

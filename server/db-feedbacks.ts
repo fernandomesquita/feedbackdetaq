@@ -1,4 +1,5 @@
-import { eq, desc, and, or, like, gte, lte, sql } from "drizzle-orm";
+import { eq, and, or, like, gte, lte, desc, sql } from "drizzle-orm";
+import { alias } from "drizzle-orm/mysql-core";
 import { getDb } from "./db";
 import { feedbacks, users, userProfiles, InsertFeedback } from "../drizzle/schema";
 
@@ -170,14 +171,18 @@ export async function getAllFeedbacks(filters?: {
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
+  // Criar aliases para as tabelas
+  const taquigrafoTable = alias(users, 'taquigrafo');
+  
   const result = await db
     .select({
       feedback: feedbacks,
       revisor: users,
-      taquigrafo: sql`(SELECT * FROM ${users} WHERE id = ${feedbacks.taquigId})`.as("taquigrafo"),
+      taquigrafo: taquigrafoTable,
     })
     .from(feedbacks)
     .leftJoin(users, eq(feedbacks.revisorId, users.id))
+    .leftJoin(taquigrafoTable, eq(feedbacks.taquigId, taquigrafoTable.id))
     .where(whereClause)
     .orderBy(desc(feedbacks.createdAt));
 

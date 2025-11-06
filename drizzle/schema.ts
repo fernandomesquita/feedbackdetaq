@@ -167,7 +167,7 @@ export const padronizacao = mysqlTable("padronizacao", {
   id: int("id").autoincrement().primaryKey(),
   term: varchar("term", { length: 255 }).notNull().unique(),
   definition: text("definition"),
-  createdBy: int("createdBy").notNull(),
+  userId: int("userId").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 }, (table) => ({
@@ -296,7 +296,7 @@ export const avisoReadsRelations = relations(avisoReads, ({ one }) => ({
 
 export const padronizacaoRelations = relations(padronizacao, ({ one }) => ({
   creator: one(users, {
-    fields: [padronizacao.createdBy],
+    fields: [padronizacao.userId],
     references: [users.id],
   }),
 }));

@@ -9,7 +9,7 @@ import { padronizacao, users } from "../drizzle/schema";
 export async function createPadronizacao(data: {
   term: string;
   definition?: string;
-  createdBy: number;
+  userId: number;
 }) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
@@ -29,11 +29,11 @@ export async function getAllPadronizacao() {
       definition: padronizacao.definition,
       createdAt: padronizacao.createdAt,
       updatedAt: padronizacao.updatedAt,
-      createdBy: padronizacao.createdBy,
+      userId: padronizacao.userId,
       creatorName: users.name,
     })
     .from(padronizacao)
-    .leftJoin(users, eq(padronizacao.createdBy, users.id))
+    .leftJoin(users, eq(padronizacao.userId, users.id))
     .orderBy(padronizacao.term);
 
   return result;
@@ -50,11 +50,11 @@ export async function getPadronizacaoById(id: number) {
       definition: padronizacao.definition,
       createdAt: padronizacao.createdAt,
       updatedAt: padronizacao.updatedAt,
-      createdBy: padronizacao.createdBy,
+      userId: padronizacao.userId,
       creatorName: users.name,
     })
     .from(padronizacao)
-    .leftJoin(users, eq(padronizacao.createdBy, users.id))
+    .leftJoin(users, eq(padronizacao.userId, users.id))
     .where(eq(padronizacao.id, id))
     .limit(1);
 
@@ -90,11 +90,11 @@ export async function searchPadronizacao(query: string) {
       term: padronizacao.term,
       definition: padronizacao.definition,
       createdAt: padronizacao.createdAt,
-      createdBy: padronizacao.createdBy,
+      userId: padronizacao.userId,
       creatorName: users.name,
     })
     .from(padronizacao)
-    .leftJoin(users, eq(padronizacao.createdBy, users.id))
+    .leftJoin(users, eq(padronizacao.userId, users.id))
     .where(
       or(
         like(padronizacao.term, searchPattern),

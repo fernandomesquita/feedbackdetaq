@@ -319,7 +319,7 @@ export const appRouter = router({
       .mutation(async ({ input, ctx }) => {
         await dbPadronizacao.createPadronizacao({
           ...input,
-          createdBy: ctx.user.id,
+          userId: ctx.user.id,
         });
         return { success: true };
       }),

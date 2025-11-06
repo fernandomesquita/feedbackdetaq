@@ -313,3 +313,9 @@
 - ✅ Proteção de rotas por perfil
 
 **Cobertura de Testes Manuais: 100%**
+
+## CORREÇÕES PÓS-TESTES (06/11/2025)
+- [x] Corrigir erro de query em Padronização (campo createdBy → userId)
+- [x] Corrigir erro de query em Feedbacks (subselect inválida)
+- [x] Criar tabelas faltantes no banco de dados
+- [x] Atualizar CHANGELOG.md com correções
