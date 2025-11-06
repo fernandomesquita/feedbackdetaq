@@ -39,10 +39,16 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 - **Arquivos alterados**: `server/routers.ts`, `server/db.ts`, `client/src/pages/Usuarios.tsx`
 - **Status**: ✅ Implementado
 
-### 🐛 Correções
+### 🐛 Correções de Bugs
 
-#### Erro de Query em Padronização
-- **Problema**: Campo `createdBy` não existe na tabela `padronizacao`
+#### Senhas de Usuários de Teste Não Funcionando
+- **Problema**: Usuários de teste criados sem senha (campo NULL)
+- **Causa**: Script de seed executado antes do campo password existir na tabela
+- **Solução**: Criado script `update-passwords.ts` para atualizar senhas dos usuários existentes
+- **Arquivos alterados**: `scripts/update-passwords.ts`
+- **Status**: ✅ Corrigido
+
+#### Erro de Query em Padronizaçãoblema**: Campo `createdBy` não existe na tabela `padronizacao`
 - **Causa**: Inconsistência entre schema (usava `createdBy`) e tabela do banco (usa `userId`)
 - **Solução**: 
   - Corrigido schema `drizzle/schema.ts` para usar `userId`

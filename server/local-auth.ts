@@ -7,6 +7,8 @@ export async function authenticateLocal(email: string, password: string) {
   const db = await getDb();
   if (!db) throw new Error('Database not available');
 
+  console.log('[LocalAuth] Attempting login for:', email);
+
   // Buscar usuário por email
   const [user] = await db
     .select()
@@ -15,15 +17,21 @@ export async function authenticateLocal(email: string, password: string) {
     .limit(1);
 
   if (!user) {
+    console.log('[LocalAuth] User not found:', email);
     return null;
   }
 
+  console.log('[LocalAuth] User found:', user.email, 'has password:', !!user.password);
+
   // Verificar senha
   if (!user.password) {
-    return null; // Usuário sem senha (OAuth only)
+    console.log('[LocalAuth] User has no password (OAuth only)');
+    return null;
   }
 
   const isValid = await bcrypt.compare(password, user.password);
+  console.log('[LocalAuth] Password valid:', isValid);
+  
   if (!isValid) {
     return null;
   }

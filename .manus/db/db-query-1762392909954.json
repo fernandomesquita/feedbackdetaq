@@ -1,0 +1,34 @@
+{
+  "query": "SELECT id, email, name, password IS NOT NULL as has_password FROM users WHERE email LIKE '%@test.com'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT id, email, name, password IS NOT NULL as has_password FROM users WHERE email LIKE '%@test.com'",
+  "rows": [
+    {
+      "id": "30209",
+      "email": "master@test.com",
+      "name": "Master Admin",
+      "has_password": "0"
+    },
+    {
+      "id": "30210",
+      "email": "diretor@test.com",
+      "name": "Diretor Silva",
+      "has_password": "0"
+    },
+    {
+      "id": "30211",
+      "email": "revisor@test.com",
+      "name": "Revisor Santos",
+      "has_password": "0"
+    },
+    {
+      "id": "30212",
+      "email": "taquigrafo@test.com",
+      "name": "Taquígrafo João",
+      "has_password": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\thas_password\n30209\tmaster@test.com\tMaster Admin\t0\n30210\tdiretor@test.com\tDiretor Silva\t0\n30211\trevisor@test.com\tRevisor Santos\t0\n30212\ttaquigrafo@test.com\tTaquígrafo João\t0\n",
+  "stderr": "",
+  "execution_time_ms": 54
+}

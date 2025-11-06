@@ -1,0 +1,14 @@
+{
+  "query": "SELECT email, LEFT(password, 20) as password_hash FROM users WHERE email = 'master@test.com'",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT email, LEFT(password, 20) as password_hash FROM users WHERE email = 'master@test.com'",
+  "rows": [
+    {
+      "email": "master@test.com",
+      "password_hash": "NULL"
+    }
+  ],
+  "messages": [],
+  "stdout": "email\tpassword_hash\nmaster@test.com\tNULL\n",
+  "stderr": "",
+  "execution_time_ms": 53
+}
