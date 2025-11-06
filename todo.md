@@ -158,3 +158,9 @@
 **Última atualização:** 06/11/2025 - 20:15  
 **Status do Projeto:** Em Produção  
 **Cobertura de Funcionalidades:** 95%
+
+## CORREÇÃO ESTATÍSTICAS DIRETOR (06/11/2025 - 20:18)
+- [x] Investigar erro nas queries de estatísticas para perfil DIRETOR
+- [x] Verificar logs do servidor
+- [x] Corrigir queries SQL com problemas de GROUP BY (usar COUNT(*) ao invés de count())
+- [x] Testar carregamento de gráficos
