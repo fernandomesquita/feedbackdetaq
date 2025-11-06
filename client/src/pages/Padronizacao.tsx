@@ -68,9 +68,11 @@ export default function Padronizacao() {
            (term.definition && term.definition.toLowerCase().includes(searchTerm.toLowerCase()));
   });
 
-  // Agrupar termos por letra inicial
+  // Agrupar termos por letra inicial (ignorando aspas)
   const groupedTerms = filteredTerms.reduce((acc: Record<string, typeof terms>, term: any) => {
-    const firstLetter = term.term[0]?.toUpperCase() || "#";
+    // Remover aspas do início para determinar a letra
+    const cleanTerm = term.term.replace(/^["'""''`]/, '');
+    const firstLetter = cleanTerm[0]?.toUpperCase() || "#";
     if (!acc[firstLetter]) acc[firstLetter] = [];
     acc[firstLetter].push(term);
     return acc;

@@ -368,3 +368,7 @@
 - [x] Exibir estatísticas de visualização para MASTER/DIRETOR
 - [x] Testar sistema de notificações
 - [x] Atualizar CHANGELOG.md
+
+## CORREÇÕES (06/11/2025 - 23:17)
+- [x] Adicionar cores de fundo diferentes para avisos no dashboard (cores claras, opacidade baixa)
+- [x] Ignorar aspas no início dos termos para organização alfabética na Padronização

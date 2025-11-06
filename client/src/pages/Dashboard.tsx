@@ -56,6 +56,18 @@ export default function Dashboard() {
     }
   };
 
+  const getAvisoBackgroundClass = (type: string) => {
+    switch (type) {
+      case "URGENTE":
+        return "bg-red-50 border-red-200";
+      case "RECORRENTE":
+        return "bg-purple-50 border-purple-200";
+      case "COTIDIANO":
+      default:
+        return "bg-blue-50 border-blue-200";
+    }
+  };
+
   const getRoleLabel = (role: string | null) => {
     const labels: Record<string, string> = {
       MASTER: "Master",
@@ -82,7 +94,7 @@ export default function Dashboard() {
         {activeAvisos.length > 0 && (
           <div className="space-y-3">
             {activeAvisos.map((aviso: any) => (
-              <Alert key={aviso.id} variant={getAvisoVariant(aviso.type)} className="relative">
+              <Alert key={aviso.id} variant={getAvisoVariant(aviso.type)} className={`relative ${getAvisoBackgroundClass(aviso.type)}`}>
                 <div className="flex items-start gap-3">
                   {getAvisoIcon(aviso.type)}
                   <div className="flex-1">
