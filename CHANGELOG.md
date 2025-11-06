@@ -10,6 +10,24 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ### ✨ Novas Funcionalidades
 
+#### Bypass de Autenticação - Login Local
+- **Funcionalidade**: Sistema de login local com email/senha, bypass do OAuth
+- **Implementação**:
+  - Campo `password` adicionado na tabela `users`
+  - Helper `authenticateLocal()` com bcrypt para validação de senha
+  - API `auth.loginLocal` para autenticação
+  - Página `/login` com formulário de login
+  - 4 usuários de teste criados (master, diretor, revisor, taquigrafo)
+  - Senha padrão: `abccbaabc`
+  - Redirecionamento automático para /login quando não autenticado
+- **Usuários de teste**:
+  - master@test.com (MASTER)
+  - diretor@test.com (DIRETOR)
+  - revisor@test.com (REVISOR)
+  - taquigrafo@test.com (TAQUIGRAFO)
+- **Arquivos alterados**: `drizzle/schema.ts`, `server/local-auth.ts`, `server/routers.ts`, `client/src/pages/Login.tsx`, `client/src/App.tsx`, `client/src/pages/Home.tsx`
+- **Status**: ✅ Implementado
+
 #### Gestão de Usuários - Criação de Usuários
 - **Funcionalidade**: MASTER pode criar novos usuários diretamente pela interface
 - **Implementação**: 

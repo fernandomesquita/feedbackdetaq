@@ -2,6 +2,8 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { TRPCError } from "@trpc/server";
+import { sdk } from "./_core/sdk";
 import { z } from "zod";
 import * as db from "./db";
 import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum, reactionTypeEnum, avisoTypeEnum } from "../drizzle/schema";
@@ -22,10 +24,39 @@ export const appRouter = router({
       
       return {
         ...ctx.user,
-        feedbackRole: profile?.feedbackRole || null,
+        feedbackRole: profile?.feedbackRole || null
       };
     }),
-    
+    loginLocal: publicProcedure
+      .input(z.object({ email: z.string().email(), password: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        const { authenticateLocal } = await import('./local-auth');
+        const user = await authenticateLocal(input.email, input.password);
+        
+        if (!user) {
+          throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Email ou senha inválidos' });
+        }
+
+        // Atualizar lastSignedIn
+        await db.upsertUser({
+          openId: user.openId,
+          name: user.name,
+          email: user.email,
+          loginMethod: 'local',
+          lastSignedIn: new Date(),
+        });
+
+        // Criar sessão
+        const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
+        const sessionToken = await sdk.createSessionToken(user.openId, {
+          name: user.name || "",
+          expiresInMs: ONE_YEAR_MS,
+        });
+        const cookieOptions = getSessionCookieOptions(ctx.req);
+        ctx.res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
+
+        return { success: true, user };
+      }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
@@ -33,22 +64,13 @@ export const appRouter = router({
         success: true,
       } as const;
     }),
-
     updateProfile: protectedProcedure
-      .input(z.object({
-        feedbackRole: z.enum(feedbackRoleEnum),
-      }))
+      .input(z.object({ feedbackRole: z.enum(["MASTER", "DIRETOR", "REVISOR", "TAQUIGRAFO"]) }))
       .mutation(async ({ ctx, input }) => {
-        await db.upsertUserProfile({
-          userId: ctx.user.id,
-          feedbackRole: input.feedbackRole,
-        });
-
+        await db.updateUserProfile(ctx.user.id, { feedbackRole: input.feedbackRole });
         return { success: true };
       }),
-  }),
-
-  // Placeholder para futuros routers de funcionalidades
+  }),  // Placeholder para futuros routers de funcionalidades
   feedbacks: router({
     create: protectedProcedure
       .input(z.object({

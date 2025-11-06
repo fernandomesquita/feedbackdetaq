@@ -330,3 +330,12 @@
 - [x] Adicionar botão de exclusão de usuário na interface - já existia
 - [x] Criar dialog de criação de usuário
 - [x] Adicionar confirmação de exclusão de usuário - já existia
+
+## BYPASS DE AUTENTICAÇÃO (06/11/2025)
+- [x] Adicionar campo password na tabela users
+- [x] Criar sistema de autenticação local (email/senha)
+- [x] Criar página de login customizada
+- [x] Criar usuários de teste para cada perfil (master, diretor, revisor, taquigrafo)
+- [x] Implementar hash de senha com bcrypt
+- [x] Criar API de login local (auth.loginLocal)
+- [x] Atualizar rotas para redirecionar para /login

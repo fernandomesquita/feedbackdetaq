@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Redirect } from "wouter";
 
 /**
  * All content in this page are only for example, replace with your own feature implementation
@@ -16,8 +16,10 @@ export default function Home() {
   useEffect(() => {
     if (isAuthenticated && user) {
       setLocation("/dashboard");
+    } else if (!loading && !isAuthenticated) {
+      setLocation("/login");
     }
-  }, [isAuthenticated, user, setLocation]);
+  }, [isAuthenticated, user, loading, setLocation]);
 
   // If theme is switchable in App.tsx, we can implement theme toggling like this:
   // const { theme, toggleTheme } = useTheme();
