@@ -1,0 +1,18 @@
+{
+  "query": "SELECT COUNT(*) as total, type FROM feedbacks GROUP BY type",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT COUNT(*) as total, type FROM feedbacks GROUP BY type",
+  "rows": [
+    {
+      "total": "5",
+      "type": "CORRETIVO"
+    },
+    {
+      "total": "1",
+      "type": "POSITIVO"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\ttype\n5\tCORRETIVO\n1\tPOSITIVO\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

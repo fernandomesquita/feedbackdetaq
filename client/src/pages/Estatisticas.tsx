@@ -61,6 +61,11 @@ export default function Estatisticas() {
     value: item.count,
   })) || [];
 
+  // Debug
+  console.log('feedbackStats:', feedbackStats);
+  console.log('feedbackTypeData:', feedbackTypeData);
+  console.log('feedbackReadData:', feedbackReadData);
+
   const monthlyData = feedbackStats?.byMonth.map((item: any) => ({
     month: item.month,
     feedbacks: item.count,
@@ -176,25 +181,31 @@ export default function Estatisticas() {
               <CardDescription>Distribuição entre corretivos e positivos</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={feedbackTypeData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    label={(entry) => `${entry.name}: ${entry.value}`}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                  >
-                    {feedbackTypeData.map((entry: any, index: number) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[entry.type as keyof typeof COLORS]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+              {feedbackTypeData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={feedbackTypeData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={(entry) => `${entry.name}: ${entry.value}`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                    >
+                      {feedbackTypeData.map((entry: any, index: number) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[entry.type as keyof typeof COLORS]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                  <p>Nenhum dado disponível</p>
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -205,15 +216,21 @@ export default function Estatisticas() {
               <CardDescription>Feedbacks lidos vs não lidos</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={feedbackReadData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#3b82f6" />
-                </BarChart>
-              </ResponsiveContainer>
+              {feedbackReadData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={feedbackReadData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#3b82f6" />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+                  <p>Nenhum dado disponível</p>
+                </div>
+              )}
             </CardContent>
           </Card>
 

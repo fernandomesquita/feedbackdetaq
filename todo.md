@@ -168,3 +168,10 @@
 ## MELHORIA BUSCA DE FEEDBACKS (06/11/2025 - 20:21)
 - [x] Incluir campo sessionNum na busca de feedbacks
 - [x] Testar busca por número de sessão (ex: 77998, 250)
+
+## INVESTIGAÇÃO ESTATÍSTICAS VAZIAS (06/11/2025 - 20:23)
+- [x] Verificar se há feedbacks cadastrados no banco (6 feedbacks confirmados)
+- [x] Testar queries de estatísticas diretamente no banco
+- [x] Verificar logs de erro no console do navegador
+- [x] Verificar se a API de estatísticas está retornando dados
+- [x] Corrigir problema de renderização dos gráficos (count() -> COUNT(*) em byType e byReadStatus)

@@ -40,7 +40,7 @@ export async function getFeedbackStats() {
     const byType = await db
       .select({
         type: feedbacks.type,
-        count: count(),
+        count: sql<number>`COUNT(*)`,
       })
       .from(feedbacks)
       .groupBy(feedbacks.type);
@@ -49,7 +49,7 @@ export async function getFeedbackStats() {
     const byReadStatus = await db
       .select({
         isRead: feedbacks.isRead,
-        count: count(),
+        count: sql<number>`COUNT(*)`,
       })
       .from(feedbacks)
       .groupBy(feedbacks.isRead);
