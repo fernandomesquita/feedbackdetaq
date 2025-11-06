@@ -391,3 +391,8 @@
 
 ## CORREÇÃO ORDENAÇÃO COM ASPAS (06/11/2025 - 20:09)
 - [x] Ignorar aspas completamente na ordenação alfabética dos termos (não apenas na classificação por letra)
+
+## CORREÇÕES DASHBOARD DIRETOR (06/11/2025 - 20:11)
+- [x] Corrigir contagem de termos padronizados no card (mostra 0)
+- [x] Verificar badge de notificação de novos termos no menu (já implementado corretamente)
+- [x] Remover card de Feedbacks para perfil DIRETOR (apenas questões administrativas)

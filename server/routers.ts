@@ -404,6 +404,12 @@ export const appRouter = router({
         return terms;
       }),
 
+    count: protectedProcedure
+      .query(async () => {
+        const terms = await dbPadronizacao.getAllPadronizacao();
+        return terms.length;
+      }),
+
     getById: protectedProcedure
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {

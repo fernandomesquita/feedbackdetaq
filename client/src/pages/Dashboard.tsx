@@ -11,6 +11,7 @@ export default function Dashboard() {
   const { user, feedbackRole } = useAuthWithProfile();
   const { data: feedbackCount = 0 } = trpc.feedbacks.count.useQuery();
   const { data: avisos = [] } = trpc.avisos.list.useQuery();
+  const { data: padronizacaoCount = 0 } = trpc.padronizacao.count.useQuery();
   const [dismissedAvisos, setDismissedAvisos] = useState<number[]>([]);
   const utils = trpc.useUtils();
   
@@ -126,7 +127,9 @@ export default function Dashboard() {
         )}
 
         {/* Stats Cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {/* Card de Feedbacks - não mostrar para DIRETOR */}
+          {feedbackRole !== "DIRETOR" && (
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
@@ -141,6 +144,7 @@ export default function Dashboard() {
               </p>
             </CardContent>
           </Card>
+          )}
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -165,9 +169,9 @@ export default function Dashboard() {
               <BookOpen className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">{padronizacaoCount}</div>
               <p className="text-xs text-muted-foreground">
-                Glossário vazio
+                {padronizacaoCount === 0 ? "Glossário vazio" : `${padronizacaoCount} termo${padronizacaoCount > 1 ? 's' : ''} cadastrado${padronizacaoCount > 1 ? 's' : ''}`}
               </p>
             </CardContent>
           </Card>
