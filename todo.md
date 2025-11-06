@@ -179,3 +179,8 @@
 - [x] Criar API de listagem de usuários por role
 - [x] Marcação automática como lido ao visualizar
 - [x] Validações de permissões por role
+
+## CORREÇÃO DE ERRO (06/11/2025)
+- [x] Criar tabela user_profiles no banco de dados
+- [x] Configurar perfil MASTER para usuário owner
+- [x] Corrigir erro de query em getUserProfile
