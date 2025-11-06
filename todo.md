@@ -318,4 +318,5 @@
 - [x] Corrigir erro de query em Padronização (campo createdBy → userId)
 - [x] Corrigir erro de query em Feedbacks (subselect inválida)
 - [x] Criar tabelas faltantes no banco de dados
+- [x] Corrigir campo definition para aceitar NULL em padronizacao
 - [x] Atualizar CHANGELOG.md com correções

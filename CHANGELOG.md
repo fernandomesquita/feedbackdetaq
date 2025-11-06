@@ -35,6 +35,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 - **Solução**: Criadas todas as tabelas manualmente via SQL com índices corretos
 - **Status**: ✅ Corrigido
 
+#### Erro ao Inserir Termo sem Definição
+- **Problema**: Campo `definition` não aceita NULL na tabela `padronizacao`
+- **Causa**: Tabela criada com `NOT NULL` mas schema permite NULL
+- **Solução**: Alterada coluna `definition` para aceitar NULL via `ALTER TABLE`
+- **Arquivos alterados**: Banco de dados
+- **Status**: ✅ Corrigido
+
 ---
 
 ## [1.0.0] - 2025-11-06
