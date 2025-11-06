@@ -1,0 +1,1 @@
+ALTER TABLE `feedbacks` MODIFY COLUMN `categories` json;

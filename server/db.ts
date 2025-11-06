@@ -32,21 +32,24 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   try {
     const values: InsertUser = {
       openId: user.openId,
+      name: user.name || "Usuário",
+      email: user.email || `${user.openId}@temp.com`,
     };
     const updateSet: Record<string, unknown> = {};
 
-    const textFields = ["name", "email", "loginMethod"] as const;
-    type TextField = (typeof textFields)[number];
+    if (user.name !== undefined) {
+      values.name = user.name;
+      updateSet.name = user.name;
+    }
+    if (user.email !== undefined) {
+      values.email = user.email;
+      updateSet.email = user.email;
+    }
+    if (user.loginMethod !== undefined) {
+      values.loginMethod = user.loginMethod;
+      updateSet.loginMethod = user.loginMethod;
+    }
 
-    const assignNullable = (field: TextField) => {
-      const value = user[field];
-      if (value === undefined) return;
-      const normalized = value ?? null;
-      values[field] = normalized;
-      updateSet[field] = normalized;
-    };
-
-    textFields.forEach(assignNullable);
 
     if (user.lastSignedIn !== undefined) {
       values.lastSignedIn = user.lastSignedIn;
