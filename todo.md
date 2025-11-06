@@ -341,3 +341,4 @@
 - [x] Atualizar rotas para redirecionar para /login
 - [x] Corrigir senhas dos usuários de teste (executar update-passwords.ts)
 - [x] Corrigir erro de SelectItem com value vazio em FeedbackNew.tsx
+- [x] Corrigir erro de insert em feedbacks (campo content NOT NULL)

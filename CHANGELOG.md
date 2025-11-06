@@ -41,6 +41,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ### 🐛 Correções de Bugs
 
+#### Erro de Insert em Feedbacks (Campo content NOT NULL)
+- **Problema**: Inserção de feedback falhando quando content é vazio
+- **Causa**: Campo content definido como NOT NULL no banco
+- **Solução**: Alterado coluna content para aceitar NULL
+- **Arquivos alterados**: Banco de dados (ALTER TABLE)
+- **Status**: ✅ Corrigido
+
 #### Erro de SelectItem com Value Vazio
 - **Problema**: SelectItem com value="" causando erro no Radix UI
 - **Causa**: Radix Select não permite value vazio
