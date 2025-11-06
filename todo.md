@@ -184,3 +184,12 @@
 - [x] Criar tabela user_profiles no banco de dados
 - [x] Configurar perfil MASTER para usuário owner
 - [x] Corrigir erro de query em getUserProfile
+
+## FASE 5: Upload de Imagens (2 dias) - CONCLUÍDA
+- [x] Criar API de upload com multer e S3
+- [x] Criar componente ImageUpload reutilizável
+- [x] Adicionar preview de imagem
+- [x] Implementar validação de tamanho (5MB) e tipo
+- [x] Adicionar campo de imagem no formulário de feedback
+- [x] Integrar upload no servidor Express
+- [x] Exibir imagem na visualização de feedback

@@ -11,6 +11,7 @@ import { ArrowLeft, Save } from "lucide-react";
 import { useLocation } from "wouter";
 import { toast } from "sonner";
 import { useState } from "react";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export default function FeedbackNew() {
   const [, setLocation] = useLocation();
@@ -23,6 +24,7 @@ export default function FeedbackNew() {
     sessionType: "" as "" | "PLENARIO" | "COMISSAO",
     sessionNum: "",
     taquigId: 0,
+    imageUrl: "",
   });
 
   // Query para buscar taquígrafos
@@ -58,6 +60,7 @@ export default function FeedbackNew() {
       rating: formData.rating > 0 ? formData.rating : undefined,
       sessionType: formData.sessionType || undefined,
       sessionNum: formData.sessionNum || undefined,
+      imageUrl: formData.imageUrl || undefined,
       taquigId: formData.taquigId,
     });
   };
@@ -195,6 +198,15 @@ export default function FeedbackNew() {
                     onChange={(e) => setFormData({ ...formData, rating: parseFloat(e.target.value) || 0 })}
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Imagem (opcional)</label>
+                <ImageUpload
+                  onUploadComplete={(url) => setFormData({ ...formData, imageUrl: url })}
+                  currentImage={formData.imageUrl}
+                  onRemove={() => setFormData({ ...formData, imageUrl: "" })}
+                />
               </div>
 
               <div className="flex justify-end gap-2 pt-4">
