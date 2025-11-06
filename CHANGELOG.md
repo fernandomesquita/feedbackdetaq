@@ -49,6 +49,13 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 - **Arquivos alterados**: `client/src/components/DashboardLayout.tsx`
 - **Status**: ✅ Corrigido
 
+#### Erro em Query de Estatísticas (DATE_FORMAT)
+- **Problema**: Query com `DATE_FORMAT` falha quando tabela feedbacks está vazia
+- **Causa**: Função `getFeedbackStats()` não trata erro quando não há dados
+- **Solução**: Adicionado try-catch em `getFeedbackStats()` para retornar arrays vazios em caso de erro
+- **Arquivos alterados**: `server/db-statistics.ts`
+- **Status**: ✅ Corrigido
+
 ---
 
 ## [1.0.0] - 2025-11-06

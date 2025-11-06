@@ -321,3 +321,4 @@
 - [x] Corrigir campo definition para aceitar NULL em padronizacao
 - [x] Atualizar CHANGELOG.md com correções
 - [x] Corrigir rotas do menu (statistics → estatisticas, users → usuarios)
+- [x] Adicionar try-catch em getFeedbackStats para tratar erro quando não há dados

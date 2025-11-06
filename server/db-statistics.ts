@@ -35,43 +35,52 @@ export async function getFeedbackStats() {
   const db = await getDb();
   if (!db) return null;
 
-  // Total por tipo
-  const byType = await db
-    .select({
-      type: feedbacks.type,
-      count: count(),
-    })
-    .from(feedbacks)
-    .groupBy(feedbacks.type);
+  try {
+    // Total por tipo
+    const byType = await db
+      .select({
+        type: feedbacks.type,
+        count: count(),
+      })
+      .from(feedbacks)
+      .groupBy(feedbacks.type);
 
-  // Total lidos vs não lidos
-  const byReadStatus = await db
-    .select({
-      isRead: feedbacks.isRead,
-      count: count(),
-    })
-    .from(feedbacks)
-    .groupBy(feedbacks.isRead);
+    // Total lidos vs não lidos
+    const byReadStatus = await db
+      .select({
+        isRead: feedbacks.isRead,
+        count: count(),
+      })
+      .from(feedbacks)
+      .groupBy(feedbacks.isRead);
 
-  // Feedbacks por mês (últimos 6 meses)
-  const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    // Feedbacks por mês (últimos 6 meses)
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-  const byMonth = await db
-    .select({
-      month: sql<string>`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`,
-      count: count(),
-    })
-    .from(feedbacks)
-    .where(gte(feedbacks.createdAt, sixMonthsAgo))
-    .groupBy(sql`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`)
-    .orderBy(sql`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`);
+    const byMonth = await db
+      .select({
+        month: sql<string>`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`,
+        count: count(),
+      })
+      .from(feedbacks)
+      .where(gte(feedbacks.createdAt, sixMonthsAgo))
+      .groupBy(sql`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`)
+      .orderBy(sql`DATE_FORMAT(${feedbacks.createdAt}, '%Y-%m')`);
 
-  return {
-    byType,
-    byReadStatus,
-    byMonth,
-  };
+    return {
+      byType,
+      byReadStatus,
+      byMonth,
+    };
+  } catch (error) {
+    console.error('Error fetching feedback stats:', error);
+    return {
+      byType: [],
+      byReadStatus: [],
+      byMonth: [],
+    };
+  }
 }
 
 /**
