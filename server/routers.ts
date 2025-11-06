@@ -134,10 +134,57 @@ export const appRouter = router({
 
   users: router({
     listByRole: protectedProcedure
-      .input(z.object({ role: z.enum(feedbackRoleEnum) }))
+      .input(z.object({ role: z.enum(["MASTER", "DIRETOR", "REVISOR", "TAQUIGRAFO"]) }))
       .query(async ({ input }) => {
-        const profiles = await db.getUserProfilesByRole(input.role);
-        return profiles;
+        const users = await db.getUserProfilesByRole(input.role);
+        return users;
+      }),
+
+    list: protectedProcedure
+      .query(async () => {
+        const users = await db.getAllUsersWithProfiles();
+        return users;
+      }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const user = await db.getUserWithProfile(input.id);
+        return user;
+      }),
+
+    updateProfile: protectedProcedure
+      .input(z.object({
+        userId: z.number(),
+        feedbackRole: z.enum(["MASTER", "DIRETOR", "REVISOR", "TAQUIGRAFO"]),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Apenas MASTER pode alterar perfis
+        const currentUserProfile = await db.getUserProfile(ctx.user.id);
+        if (currentUserProfile?.feedbackRole !== "MASTER") {
+          throw new Error("Apenas Master pode alterar perfis de usuários");
+        }
+
+        await db.updateUserProfile(input.userId, { feedbackRole: input.feedbackRole });
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        // Apenas MASTER pode deletar usuários
+        const currentUserProfile = await db.getUserProfile(ctx.user.id);
+        if (currentUserProfile?.feedbackRole !== "MASTER") {
+          throw new Error("Apenas Master pode deletar usuários");
+        }
+
+        // Não pode deletar a si mesmo
+        if (input.id === ctx.user.id) {
+          throw new Error("Você não pode deletar seu próprio usuário");
+        }
+
+        await db.deleteUser(input.id);
+        return { success: true };
       }),
   }),
 

@@ -243,3 +243,16 @@
 - [x] Criar gráfico de pizza para reações
 - [x] Implementar índice de qualidade (média de avaliação)
 - [x] Criar rankings de top taquígrafos e revisores (apenas MASTER/DIRETOR)
+
+## FASE 10: Gestão de Usuários (2-3 dias) - CONCLUÍDA
+- [x] Criar APIs tRPC para gestão de usuários (list, getById, updateProfile, delete)
+- [x] Criar helpers de banco (getAllUsersWithProfiles, updateUserProfile, deleteUser)
+- [x] Criar página de Gestão de Usuários (apenas MASTER)
+- [x] Implementar listagem de usuários com perfis
+- [x] Criar cards de estatísticas por perfil
+- [x] Implementar dialog de edição de perfil
+- [x] Implementar exclusão de usuário (com validações)
+- [x] Exibir informações detalhadas (email, último acesso, data de cadastro)
+- [x] Adicionar badges coloridos por perfil
+- [x] Validação: apenas MASTER pode gerenciar usuários
+- [x] Validação: não pode deletar a si mesmo

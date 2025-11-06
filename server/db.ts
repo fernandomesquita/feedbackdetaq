@@ -182,3 +182,62 @@ export async function getUserProfilesByRole(role: string) {
 
   return result;
 }
+
+/**
+ * GESTÃO DE USUÁRIOS
+ */
+
+export async function getAllUsersWithProfiles() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      id: users.id,
+      openId: users.openId,
+      name: users.name,
+      email: users.email,
+      role: users.role,
+      createdAt: users.createdAt,
+      lastSignedIn: users.lastSignedIn,
+      feedbackRole: userProfiles.feedbackRole,
+      profileId: userProfiles.id,
+    })
+    .from(users)
+    .leftJoin(userProfiles, eq(users.id, userProfiles.userId));
+
+  return result;
+}
+
+export async function updateUserProfile(userId: number, data: { feedbackRole: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Verificar se o perfil existe
+  const existingProfile = await getUserProfile(userId);
+
+  if (existingProfile) {
+    // Atualizar perfil existente
+    await db
+      .update(userProfiles)
+      .set({ feedbackRole: data.feedbackRole as any })
+      .where(eq(userProfiles.userId, userId));
+  } else {
+    // Criar novo perfil
+    await db.insert(userProfiles).values({
+      userId,
+      feedbackRole: data.feedbackRole as any,
+    });
+  }
+}
+
+export async function deleteUser(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Deletar perfil primeiro (foreign key)
+  await db.delete(userProfiles).where(eq(userProfiles.userId, userId));
+
+  // Deletar usuário
+  await db.delete(users).where(eq(users.id, userId));
+}

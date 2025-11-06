@@ -13,6 +13,7 @@ import Avisos from "./pages/Avisos";
 import AvisoNew from "./pages/AvisoNew";
 import Padronizacao from "./pages/Padronizacao";
 import Estatisticas from "./pages/Estatisticas";
+import Usuarios from "./pages/Usuarios";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -27,6 +28,7 @@ function Router() {
       <Route path={"/avisos/new"} component={AvisoNew} />
       <Route path={"/padronizacao"} component={Padronizacao} />
       <Route path={"/estatisticas"} component={Estatisticas} />
+      <Route path={"/usuarios"} component={Usuarios} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
