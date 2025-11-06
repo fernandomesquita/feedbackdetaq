@@ -343,3 +343,5 @@
 - [x] Corrigir erro de SelectItem com value vazio em FeedbackNew.tsx
 - [x] Corrigir erro de insert em feedbacks (campo content NOT NULL)
 - [x] Corrigir erro de insert em feedbacks (rating decimal vs inteiro)
+- [x] Ajustar dashboard para mostrar "Feedbacks Enviados" para revisores
+- [x] Manter "Feedbacks Recebidos" apenas para taquígrafos

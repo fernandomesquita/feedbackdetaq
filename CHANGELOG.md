@@ -28,6 +28,15 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 - **Arquivos alterados**: `drizzle/schema.ts`, `server/local-auth.ts`, `server/routers.ts`, `client/src/pages/Login.tsx`, `client/src/App.tsx`, `client/src/pages/Home.tsx`
 - **Status**: ✅ Implementado
 
+#### Dashboard Diferenciado por Perfil
+- **Funcionalidade**: Dashboard exibe estatísticas diferentes baseado no perfil do usuário
+- **Implementação**:
+  - Revisores veem "Feedbacks Enviados" (feedbacks criados por eles)
+  - Taquígrafos veem "Feedbacks Recebidos" (feedbacks destinados a eles)
+  - MASTER/DIRETOR veem "Feedbacks Recebidos" (visão geral do sistema)
+- **Arquivos alterados**: `client/src/pages/Dashboard.tsx`
+- **Status**: ✅ Implementado
+
 #### Gestão de Usuários - Criação de Usuários
 - **Funcionalidade**: MASTER pode criar novos usuários diretamente pela interface
 - **Implementação**: 
