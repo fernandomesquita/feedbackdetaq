@@ -164,3 +164,7 @@
 - [x] Verificar logs do servidor
 - [x] Corrigir queries SQL com problemas de GROUP BY (usar COUNT(*) ao invés de count())
 - [x] Testar carregamento de gráficos
+
+## MELHORIA BUSCA DE FEEDBACKS (06/11/2025 - 20:21)
+- [x] Incluir campo sessionNum na busca de feedbacks
+- [x] Testar busca por número de sessão (ex: 77998, 250)

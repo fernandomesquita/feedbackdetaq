@@ -74,7 +74,8 @@ export async function getFeedbacksByTaquigrafo(taquigId: number, filters?: {
     conditions.push(
       or(
         like(feedbacks.title, `%${filters.search}%`),
-        like(feedbacks.content, `%${filters.search}%`)
+        like(feedbacks.content, `%${filters.search}%`),
+        like(feedbacks.sessionNum, `%${filters.search}%`)
       )!
     );
   }
@@ -119,7 +120,8 @@ export async function getFeedbacksByRevisor(revisorId: number, filters?: {
     conditions.push(
       or(
         like(feedbacks.title, `%${filters.search}%`),
-        like(feedbacks.content, `%${filters.search}%`)
+        like(feedbacks.content, `%${filters.search}%`),
+        like(feedbacks.sessionNum, `%${filters.search}%`)
       )!
     );
   }
@@ -164,7 +166,8 @@ export async function getAllFeedbacks(filters?: {
     conditions.push(
       or(
         like(feedbacks.title, `%${filters.search}%`),
-        like(feedbacks.content, `%${filters.search}%`)
+        like(feedbacks.content, `%${filters.search}%`),
+        like(feedbacks.sessionNum, `%${filters.search}%`)
       )!
     );
   }
