@@ -4,7 +4,8 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
-import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum } from "../drizzle/schema";
+import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum, reactionTypeEnum } from "../drizzle/schema";
+import * as dbComments from "./db-comments";
 
 export const appRouter = router({
   system: systemRouter,
@@ -138,11 +139,57 @@ export const appRouter = router({
   }),
 
   comments: router({
-    // TODO: implementar rotas de comentários
+    create: protectedProcedure
+      .input(z.object({
+        feedbackId: z.number(),
+        content: z.string().min(1),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await dbComments.createComment({
+          feedbackId: input.feedbackId,
+          userId: ctx.user.id,
+          content: input.content,
+        });
+        return { success: true };
+      }),
+
+    listByFeedback: protectedProcedure
+      .input(z.object({ feedbackId: z.number() }))
+      .query(async ({ input }) => {
+        const comments = await dbComments.getCommentsByFeedback(input.feedbackId);
+        return comments;
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ commentId: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        await dbComments.deleteComment(input.commentId, ctx.user.id);
+        return { success: true };
+      }),
   }),
 
   reactions: router({
-    // TODO: implementar rotas de reações
+    toggle: protectedProcedure
+      .input(z.object({
+        feedbackId: z.number(),
+        type: z.enum(reactionTypeEnum),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        const result = await dbComments.createReaction({
+          feedbackId: input.feedbackId,
+          userId: ctx.user.id,
+          type: input.type,
+        });
+        return result;
+      }),
+
+    listByFeedback: protectedProcedure
+      .input(z.object({ feedbackId: z.number() }))
+      .query(async ({ input }) => {
+        const reactions = await dbComments.getReactionsByFeedback(input.feedbackId);
+        const counts = await dbComments.getReactionCounts(input.feedbackId);
+        return { reactions, counts };
+      }),
   }),
 
   avisos: router({

@@ -10,6 +10,8 @@ import { useRoute, useLocation } from "wouter";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { toast } from "sonner";
+import { FeedbackComments } from "@/components/FeedbackComments";
+import { FeedbackReactions } from "@/components/FeedbackReactions";
 import { useEffect } from "react";
 
 export default function FeedbackDetail() {
@@ -212,15 +214,23 @@ export default function FeedbackDetail() {
           </CardContent>
         </Card>
 
-        {/* Comments section placeholder */}
+        {/* Reactions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Reações</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <FeedbackReactions feedbackId={feedbackId} />
+          </CardContent>
+        </Card>
+
+        {/* Comments */}
         <Card>
           <CardHeader>
             <CardTitle>Comentários</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground text-center py-8">
-              Sistema de comentários será implementado em breve
-            </p>
+            <FeedbackComments feedbackId={feedbackId} />
           </CardContent>
         </Card>
       </div>

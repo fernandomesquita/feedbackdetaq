@@ -193,3 +193,18 @@
 - [x] Adicionar campo de imagem no formulário de feedback
 - [x] Integrar upload no servidor Express
 - [x] Exibir imagem na visualização de feedback
+
+## CORREÇÃO: Rota /avisos retornando 404
+- [x] Criar página Avisos.tsx
+- [x] Adicionar rota no App.tsx
+
+## FASE 6: Comentários e Reações (3 dias) - CONCLUÍDA
+- [x] Criar helpers de banco para comentários (create, list, delete)
+- [x] Criar helpers de banco para reações (toggle, list, counts)
+- [x] Criar APIs tRPC para comentários
+- [x] Criar APIs tRPC para reações
+- [x] Criar componente FeedbackComments
+- [x] Criar componente FeedbackReactions
+- [x] Integrar componentes na página de detalhes do feedback
+- [x] Implementar sistema de toggle para reações
+- [x] Exibir contadores e usuários que reagiram

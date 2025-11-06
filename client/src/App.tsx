@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import Feedbacks from "./pages/Feedbacks";
 import FeedbackDetail from "./pages/FeedbackDetail";
 import FeedbackNew from "./pages/FeedbackNew";
+import Avisos from "./pages/Avisos";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -19,6 +20,7 @@ function Router() {
       <Route path={"/feedbacks"} component={Feedbacks} />
       <Route path={"/feedbacks/new"} component={FeedbackNew} />
       <Route path={"/feedbacks/:id"} component={FeedbackDetail} />
+      <Route path={"/avisos"} component={Avisos} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
