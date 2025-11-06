@@ -95,16 +95,16 @@ export default function Dashboard() {
           <div className="space-y-3">
             {activeAvisos.map((aviso: any) => (
               <Alert key={aviso.id} variant={getAvisoVariant(aviso.type)} className={`relative ${getAvisoBackgroundClass(aviso.type)}`}>
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-4">
                   {getAvisoIcon(aviso.type)}
-                  <div className="flex-1">
-                    <AlertTitle className="mb-1">{aviso.title}</AlertTitle>
-                    <AlertDescription>{aviso.content}</AlertDescription>
+                  <div className="flex-1 min-w-0">
+                    <AlertTitle className="text-lg font-bold mb-2">{aviso.title}</AlertTitle>
+                    <AlertDescription className="text-base font-normal leading-relaxed">{aviso.content}</AlertDescription>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-6 w-6 shrink-0"
+                    className="h-7 w-7 shrink-0"
                     onClick={() => handleDismiss(aviso.id)}
                   >
                     <X className="h-4 w-4" />

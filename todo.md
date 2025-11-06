@@ -372,3 +372,8 @@
 ## CORREÇÕES (06/11/2025 - 23:17)
 - [x] Adicionar cores de fundo diferentes para avisos no dashboard (cores claras, opacidade baixa)
 - [x] Ignorar aspas no início dos termos para organização alfabética na Padronização
+
+## AJUSTES DE TIPOGRAFIA (06/11/2025 - 23:20)
+- [x] Aumentar tamanho do título do aviso
+- [x] Título em negrito, conteúdo em fonte normal
+- [x] Melhorar distribuição do texto (não espremido à esquerda)
