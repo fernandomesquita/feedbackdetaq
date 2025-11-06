@@ -7,6 +7,7 @@ import * as db from "./db";
 import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum, reactionTypeEnum, avisoTypeEnum } from "../drizzle/schema";
 import * as dbComments from "./db-comments";
 import * as dbAvisos from "./db-avisos";
+import * as dbPadronizacao from "./db-padronizacao";
 
 export const appRouter = router({
   system: systemRouter,
@@ -262,7 +263,57 @@ export const appRouter = router({
   }),
 
   padronizacao: router({
-    // TODO: implementar rotas de padronização
+    create: protectedProcedure
+      .input(z.object({
+        term: z.string().min(1),
+        definition: z.string().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        await dbPadronizacao.createPadronizacao({
+          ...input,
+          createdBy: ctx.user.id,
+        });
+        return { success: true };
+      }),
+
+    list: protectedProcedure
+      .query(async () => {
+        const terms = await dbPadronizacao.getAllPadronizacao();
+        return terms;
+      }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const term = await dbPadronizacao.getPadronizacaoById(input.id);
+        return term;
+      }),
+
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        term: z.string().optional(),
+        definition: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const { id, ...data } = input;
+        await dbPadronizacao.updatePadronizacao(id, data);
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        await dbPadronizacao.deletePadronizacao(input.id);
+        return { success: true };
+      }),
+
+    search: protectedProcedure
+      .input(z.object({ query: z.string() }))
+      .query(async ({ input }) => {
+        const results = await dbPadronizacao.searchPadronizacao(input.query);
+        return results;
+      }),
   }),
 
   statistics: router({

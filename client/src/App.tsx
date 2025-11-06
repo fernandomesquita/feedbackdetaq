@@ -11,6 +11,7 @@ import FeedbackDetail from "./pages/FeedbackDetail";
 import FeedbackNew from "./pages/FeedbackNew";
 import Avisos from "./pages/Avisos";
 import AvisoNew from "./pages/AvisoNew";
+import Padronizacao from "./pages/Padronizacao";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +24,7 @@ function Router() {
       <Route path={"/feedbacks/:id"} component={FeedbackDetail} />
       <Route path={"/avisos"} component={Avisos} />
       <Route path={"/avisos/new"} component={AvisoNew} />
+      <Route path={"/padronizacao"} component={Padronizacao} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

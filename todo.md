@@ -219,3 +219,14 @@
 - [x] Implementar marcação de leitura
 - [x] Exibir contador de avisos não lidos
 - [x] Adicionar badges coloridos por tipo (Cotidiano, Urgente, Recorrente)
+
+## FASE 8: Área de Padronização (2 dias) - CONCLUÍDA
+- [x] Criar helpers de banco para padronização (create, list, getById, update, delete, search)
+- [x] Criar APIs tRPC para glossário (create, list, getById, update, delete, search)
+- [x] Criar página de Padronização com glossário
+- [x] Implementar busca de termos
+- [x] Criar dialog de criação de termo (MASTER/DIRETOR/REVISOR)
+- [x] Criar dialog de edição de termo
+- [x] Implementar exclusão de termo
+- [x] Exibir lista de termos ordenada alfabeticamente
+- [x] Mostrar informações do criador e data
