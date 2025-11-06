@@ -34,6 +34,7 @@ export async function getAllAvisos() {
       title: avisos.title,
       content: avisos.content,
       type: avisos.type,
+      targets: avisos.targets,
       isActive: avisos.isActive,
       publishAt: avisos.publishAt,
       createdAt: avisos.createdAt,

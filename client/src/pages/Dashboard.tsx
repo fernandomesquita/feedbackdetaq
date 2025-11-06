@@ -34,7 +34,15 @@ export default function Dashboard() {
     markAsReadMutation.mutate({ id: avisoId });
   };
 
-  const activeAvisos = avisos.filter((a: any) => !dismissedAvisos.includes(a.id) && !a.isRead);
+  // Filtrar avisos por público-alvo
+  const filteredByTarget = avisos.filter((a: any) => {
+    if (!a.targets || a.targets.length === 0) return true; // Sem targets = todos
+    if (a.targets.includes("TODOS")) return true;
+    if (feedbackRole && a.targets.includes(feedbackRole)) return true;
+    return false;
+  });
+
+  const activeAvisos = filteredByTarget.filter((a: any) => !dismissedAvisos.includes(a.id) && !a.isRead);
 
   const getAvisoIcon = (type: string) => {
     switch (type) {
@@ -94,23 +102,25 @@ export default function Dashboard() {
         {activeAvisos.length > 0 && (
           <div className="space-y-3">
             {activeAvisos.map((aviso: any) => (
-              <Alert key={aviso.id} variant={getAvisoVariant(aviso.type)} className={`relative ${getAvisoBackgroundClass(aviso.type)}`}>
-                <div className="flex items-start gap-4">
-                  {getAvisoIcon(aviso.type)}
-                  <div className="flex-1 min-w-0">
-                    <AlertTitle className="text-lg font-bold mb-2">{aviso.title}</AlertTitle>
-                    <AlertDescription className="text-base font-normal leading-relaxed">{aviso.content}</AlertDescription>
+              <div key={aviso.id} className={`relative rounded-lg border p-4 ${getAvisoBackgroundClass(aviso.type)}`}>
+                <div className="flex items-start gap-3">
+                  <div className="mt-0.5">
+                    {getAvisoIcon(aviso.type)}
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <h3 className="text-lg font-bold text-foreground">{aviso.title}</h3>
+                    <p className="text-sm text-foreground/80 whitespace-pre-wrap">{aviso.content}</p>
                   </div>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-7 w-7 shrink-0"
+                    className="h-6 w-6 shrink-0 -mt-1 -mr-1 hover:bg-foreground/10"
                     onClick={() => handleDismiss(aviso.id)}
                   >
                     <X className="h-4 w-4" />
                   </Button>
                 </div>
-              </Alert>
+              </div>
             ))}
           </div>
         )}

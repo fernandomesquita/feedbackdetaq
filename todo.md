@@ -377,3 +377,11 @@
 - [x] Aumentar tamanho do título do aviso
 - [x] Título em negrito, conteúdo em fonte normal
 - [x] Melhorar distribuição do texto (não espremido à esquerda)
+
+## CORREÇÃO URGENTE DE LAYOUT E SEGMENTAÇÃO (06/11/2025 - 23:27)
+- [x] Corrigir layout quebrado dos avisos no dashboard (título e conteúdo não aparecem)
+- [x] Reorganizar estrutura do aviso com hierarquia visual clara
+- [x] Posicionar botão X corretamente no canto superior direito
+- [x] Adicionar campo de público-alvo nos avisos (Revisores, Taquígrafos, Todos)
+- [x] Filtrar avisos exibidos no dashboard baseado no papel do usuário
+- [x] Atualizar formulário de criação de avisos com seleção de público
