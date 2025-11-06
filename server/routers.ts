@@ -128,6 +128,15 @@ export const appRouter = router({
       }),
   }),
 
+  users: router({
+    listByRole: protectedProcedure
+      .input(z.object({ role: z.enum(feedbackRoleEnum) }))
+      .query(async ({ input }) => {
+        const profiles = await db.getUserProfilesByRole(input.role);
+        return profiles;
+      }),
+  }),
+
   comments: router({
     // TODO: implementar rotas de comentários
   }),
@@ -148,9 +157,7 @@ export const appRouter = router({
     // TODO: implementar rotas de estatísticas
   }),
 
-  users: router({
-    // TODO: implementar rotas de gestão de usuários
-  }),
+
 });
 
 export type AppRouter = typeof appRouter;

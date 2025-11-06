@@ -163,3 +163,22 @@ export async function getUserProfile(userId: number) {
 }
 
 // TODO: add feature queries here as your schema grows.
+
+
+export async function getUserProfilesByRole(role: string) {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      feedbackRole: userProfiles.feedbackRole,
+    })
+    .from(userProfiles)
+    .leftJoin(users, eq(userProfiles.userId, users.id))
+    .where(eq(userProfiles.feedbackRole, role as any));
+
+  return result;
+}

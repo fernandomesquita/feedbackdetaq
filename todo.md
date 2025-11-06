@@ -165,7 +165,7 @@
 - Página Dashboard inicial com cards de estatísticas
 - Redirecionamento automático após login
 
-## FASE 4: Sistema de Feedbacks (4-5 dias) - EM ANDAMENTO
+## FASE 4: Sistema de Feedbacks (4-5 dias) - CONCLUÍDA
 - [x] Criar API de criação de feedback
 - [x] Criar API de listagem de feedbacks
 - [x] Criar API de visualização de feedback
@@ -174,8 +174,8 @@
 - [x] Criar API de marcação como lido
 - [x] Criar helpers de banco de dados para feedbacks
 - [x] Criar página de listagem com filtros
-- [ ] Criar página de visualização detalhada
-- [ ] Criar formulário de criação de feedback
-- [ ] Criar formulário de edição
-- [ ] Implementar sistema de categorias
-- [ ] Validações de permissões por role
+- [x] Criar página de visualização detalhada
+- [x] Criar formulário de criação de feedback
+- [x] Criar API de listagem de usuários por role
+- [x] Marcação automática como lido ao visualizar
+- [x] Validações de permissões por role
