@@ -72,6 +72,13 @@ export const appRouter = router({
       }),
   }),  // Placeholder para futuros routers de funcionalidades
   feedbacks: router({
+    count: protectedProcedure.query(async ({ ctx }) => {
+      const profile = await db.getUserProfile(ctx.user.id);
+      if (!profile) return 0;
+      
+      const type = profile.feedbackRole === 'REVISOR' ? 'sent' : 'received';
+      return await db.countFeedbacksByUser(ctx.user.id, type);
+    }),
     create: protectedProcedure
       .input(z.object({
         type: z.enum(feedbackTypeEnum),

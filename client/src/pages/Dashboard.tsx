@@ -1,10 +1,12 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuthWithProfile } from "@/hooks/useAuthWithProfile";
+import { trpc } from "@/lib/trpc";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquare, Bell, BookOpen, TrendingUp } from "lucide-react";
 
 export default function Dashboard() {
   const { user, feedbackRole } = useAuthWithProfile();
+  const { data: feedbackCount = 0 } = trpc.feedbacks.count.useQuery();
 
   const getRoleLabel = (role: string | null) => {
     const labels: Record<string, string> = {
@@ -38,9 +40,9 @@ export default function Dashboard() {
               <MessageSquare className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">{feedbackCount}</div>
               <p className="text-xs text-muted-foreground">
-                Nenhum feedback ainda
+                {feedbackCount === 0 ? "Nenhum feedback ainda" : `${feedbackCount} feedback${feedbackCount > 1 ? 's' : ''}`}
               </p>
             </CardContent>
           </Card>

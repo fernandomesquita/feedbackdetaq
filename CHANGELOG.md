@@ -8,6 +8,20 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ## [Em Desenvolvimento] - 2025-11-06
 
+### 🎨 Melhorias de UI/UX
+
+#### Redesign da Página de Padronização
+- **Funcionalidade**: Layout de glossário moderno e limpo
+- **Implementação**:
+  - Termos organizados em seções alfabéticas com letras grandes como separadores
+  - Removidos boxes grandes, interface mais limpa e direta
+  - Layout em colunas responsivo (1 coluna mobile, 2 tablet, 3 desktop)
+  - Botões de edição/exclusão aparecem apenas no hover
+  - Busca em tempo real mantida
+  - Melhor aproveitamento do espaço da tela
+- **Arquivos alterados**: `client/src/pages/Padronizacao.tsx`
+- **Status**: ✅ Implementado
+
 ### ✨ Novas Funcionalidades
 
 #### Bypass de Autenticação - Login Local

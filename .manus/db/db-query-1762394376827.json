@@ -1,0 +1,28 @@
+{
+  "query": "SELECT id, title, revisorId, taquigId FROM feedbacks WHERE revisorId = 30211;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT id, title, revisorId, taquigId FROM feedbacks WHERE revisorId = 30211;",
+  "rows": [
+    {
+      "id": "1",
+      "title": "teste",
+      "revisorId": "30211",
+      "taquigId": "30181"
+    },
+    {
+      "id": "2",
+      "title": "Teste 2",
+      "revisorId": "30211",
+      "taquigId": "30181"
+    },
+    {
+      "id": "3",
+      "title": "Belas escolhas",
+      "revisorId": "30211",
+      "taquigId": "30181"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\trevisorId\ttaquigId\n1\tteste\t30211\t30181\n2\tTeste 2\t30211\t30181\n3\tBelas escolhas\t30211\t30181\n",
+  "stderr": "",
+  "execution_time_ms": 84
+}

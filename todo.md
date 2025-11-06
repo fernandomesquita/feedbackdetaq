@@ -345,3 +345,10 @@
 - [x] Corrigir erro de insert em feedbacks (rating decimal vs inteiro)
 - [x] Ajustar dashboard para mostrar "Feedbacks Enviados" para revisores
 - [x] Manter "Feedbacks Recebidos" apenas para taquígrafos
+- [x] Implementar contagem dinâmica de feedbacks no dashboard
+- [x] Criar query para contar feedbacks enviados (revisores)
+- [x] Criar query para contar feedbacks recebidos (taquígrafos)
+- [x] Redesenhar página de Padronização com layout de glossário
+- [x] Organizar termos em seções alfabéticas com letras grandes
+- [x] Remover boxes grandes, mostrar apenas os termos
+- [x] Implementar layout em colunas para melhor aproveitamento do espaço

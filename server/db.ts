@@ -1,6 +1,6 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, userProfiles, InsertUserProfile } from "../drizzle/schema";
+import { InsertUser, users, userProfiles, InsertUserProfile, feedbacks } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -266,4 +266,25 @@ export async function createUserWithProfile(data: {
   });
 
   return userResult.id;
+}
+
+
+// Contar feedbacks por usuário
+export async function countFeedbacksByUser(userId: number, type: 'sent' | 'received') {
+  const db = await getDb();
+  if (!db) return 0;
+
+  try {
+    console.log('[countFeedbacksByUser] userId:', userId, 'type:', type);
+    const result = await db
+      .select({ count: sql<number>`count(*)`})
+      .from(feedbacks)
+      .where(type === 'sent' ? eq(feedbacks.revisorId, userId) : eq(feedbacks.taquigId, userId));
+    
+    console.log('[countFeedbacksByUser] result:', result);
+    return result[0]?.count || 0;
+  } catch (error) {
+    console.error('[Database] Failed to count feedbacks:', error);
+    return 0;
+  }
 }
