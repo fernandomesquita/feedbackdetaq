@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import * as db from "./db";
-import { feedbackRoleEnum } from "../drizzle/schema";
+import { feedbackRoleEnum, feedbackTypeEnum, sessionTypeEnum } from "../drizzle/schema";
 
 export const appRouter = router({
   system: systemRouter,
@@ -46,7 +46,86 @@ export const appRouter = router({
 
   // Placeholder para futuros routers de funcionalidades
   feedbacks: router({
-    // TODO: implementar rotas de feedbacks
+    create: protectedProcedure
+      .input(z.object({
+        type: z.enum(feedbackTypeEnum),
+        title: z.string().optional(),
+        content: z.string().min(1),
+        imageUrl: z.string().optional(),
+        rating: z.number().min(0).max(5).optional(),
+        sessionType: z.enum(sessionTypeEnum).optional(),
+        sessionNum: z.string().optional(),
+        categories: z.array(z.string()).optional(),
+        taquigId: z.number(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { createFeedback } = await import("./db-feedbacks");
+        const result = await createFeedback({
+          ...input,
+          revisorId: ctx.user.id,
+        });
+        return result;
+      }),
+
+    list: protectedProcedure
+      .input(z.object({
+        type: z.enum(feedbackTypeEnum).optional(),
+        isRead: z.boolean().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+        search: z.string().optional(),
+      }).optional())
+      .query(async ({ ctx, input }) => {
+        const { getFeedbacksByTaquigrafo, getFeedbacksByRevisor, getAllFeedbacks } = await import("./db-feedbacks");
+        const profile = await db.getUserProfile(ctx.user.id);
+        
+        if (profile?.feedbackRole === "TAQUIGRAFO") {
+          return getFeedbacksByTaquigrafo(ctx.user.id, input);
+        } else if (profile?.feedbackRole === "REVISOR") {
+          return getFeedbacksByRevisor(ctx.user.id, input);
+        } else {
+          return getAllFeedbacks(input);
+        }
+      }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const { getFeedbackById } = await import("./db-feedbacks");
+        return getFeedbackById(input.id);
+      }),
+
+    markAsRead: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const { markFeedbackAsRead } = await import("./db-feedbacks");
+        await markFeedbackAsRead(input.id);
+        return { success: true };
+      }),
+
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        data: z.object({
+          title: z.string().optional(),
+          content: z.string().optional(),
+          rating: z.number().min(0).max(5).optional(),
+          categories: z.array(z.string()).optional(),
+        }),
+      }))
+      .mutation(async ({ input }) => {
+        const { updateFeedback } = await import("./db-feedbacks");
+        await updateFeedback(input.id, input.data);
+        return { success: true };
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input }) => {
+        const { deleteFeedback } = await import("./db-feedbacks");
+        await deleteFeedback(input.id);
+        return { success: true };
+      }),
   }),
 
   comments: router({
