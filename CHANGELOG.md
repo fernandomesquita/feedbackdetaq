@@ -6,6 +6,35 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.0.6] - 2025-11-06
+
+### 🐛 Correção - Session Payload (ENV.appId)
+
+**Problema Identificado:**
+
+Após login no Railway, o sistema retornava erro "Session payload missing required fields" nos logs. Login funcionava (senha validada) mas o JWT criado era inválido, impedindo autenticação.
+
+**Causa:**
+- `ENV.appId` estava lendo `process.env.VITE_APP_ID`
+- Variáveis `VITE_*` são para frontend (Vite), não para backend (Node.js)
+- No Railway, `VITE_APP_ID` não existe, resultando em `appId: ""`
+- JWT criado com `appId` vazio falhava na validação `isNonEmptyString(appId)`
+
+**Solução:**
+- Alterado `ENV.appId` em `server/_core/env.ts` para usar valor fixo
+- Novo valor: `process.env.APP_ID || "feedback-taquigrafia-local"`
+- JWT agora sempre tem `appId` válido, independente do ambiente
+
+**Teste:**
+- Login testado localmente com sucesso
+- Dashboard carregando corretamente com todos os dados
+- Aguardando teste em produção Railway após deploy
+
+**Arquivos Alterados:**
+- `server/_core/env.ts` - Corrigido ENV.appId para usar valor fixo
+
+---
+
 ## [1.0.5] - 2025-11-06
 
 ### 🐛 Correção - Autenticação Railway (Cookie SameSite)

@@ -245,4 +245,13 @@
 - [x] Problema: Railway não autentica (cookie ou JWT_SECRET)
 - [x] Ajustar configuração de cookies para Railway (sameSite: lax)
 - [x] Testar localmente (TypeScript sem erros)
+- [x] Commit e push para GitHub
+
+## CORREÇÃO SESSION PAYLOAD - Railway (06/11/2025 - 22:42)
+- [x] Investigar erro "Session payload missing required fields"
+- [x] Login funciona mas session token não é válido
+- [x] Verificar sdk.verifySession() e campos obrigatórios
+- [x] Problema: ENV.appId usa VITE_APP_ID que não existe no Railway
+- [x] Corrigir env.ts para usar valor fixo ao invés de VITE_APP_ID
+- [x] Testar localmente (LOGIN FUNCIONANDO PERFEITAMENTE!)
 - [ ] Commit e push
