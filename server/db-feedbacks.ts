@@ -1,7 +1,7 @@
 import { eq, and, or, like, gte, lte, desc, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/mysql-core";
 import { getDb } from "./db";
-import { feedbacks, users, userProfiles, InsertFeedback } from "../drizzle/schema";
+import { feedbacks, users, userProfiles, InsertFeedback, comments } from "../drizzle/schema";
 
 export async function createFeedback(feedback: InsertFeedback) {
   const db = await getDb();
@@ -84,10 +84,13 @@ export async function getFeedbacksByTaquigrafo(taquigId: number, filters?: {
     .select({
       feedback: feedbacks,
       revisor: users,
+      commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS UNSIGNED)`,
     })
     .from(feedbacks)
     .leftJoin(users, eq(feedbacks.revisorId, users.id))
+    .leftJoin(comments, eq(feedbacks.id, comments.feedbackId))
     .where(and(...conditions))
+    .groupBy(feedbacks.id, users.id)
     .orderBy(desc(feedbacks.createdAt));
 
   return result;
@@ -130,10 +133,13 @@ export async function getFeedbacksByRevisor(revisorId: number, filters?: {
     .select({
       feedback: feedbacks,
       taquigrafo: users,
+      commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS UNSIGNED)`,
     })
     .from(feedbacks)
     .leftJoin(users, eq(feedbacks.taquigId, users.id))
+    .leftJoin(comments, eq(feedbacks.id, comments.feedbackId))
     .where(and(...conditions))
+    .groupBy(feedbacks.id, users.id)
     .orderBy(desc(feedbacks.createdAt));
 
   return result;
@@ -182,11 +188,14 @@ export async function getAllFeedbacks(filters?: {
       feedback: feedbacks,
       revisor: users,
       taquigrafo: taquigrafoTable,
+      commentCount: sql<number>`CAST(COUNT(DISTINCT ${comments.id}) AS UNSIGNED)`,
     })
     .from(feedbacks)
     .leftJoin(users, eq(feedbacks.revisorId, users.id))
     .leftJoin(taquigrafoTable, eq(feedbacks.taquigId, taquigrafoTable.id))
+    .leftJoin(comments, eq(feedbacks.id, comments.feedbackId))
     .where(whereClause)
+    .groupBy(feedbacks.id, users.id, taquigrafoTable.id)
     .orderBy(desc(feedbacks.createdAt));
 
   return result;

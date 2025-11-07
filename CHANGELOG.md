@@ -6,6 +6,30 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.0.7] - 2025-11-06
+
+### ✨ Nova Feature - Contador de Comentários nos Cards
+
+**Funcionalidade:**
+
+Adicionado contador visual de comentários nos cards de feedback na listagem. Agora os usuários podem identificar rapidamente quais feedbacks têm discussões ativas sem precisar abrir cada um.
+
+**Implementação:**
+- Modificadas queries em `server/db-feedbacks.ts` para incluir `COUNT(DISTINCT comments.id)`
+- Adicionado LEFT JOIN com tabela `comments` em:
+  * `getFeedbacksByTaquigrafo()`
+  * `getFeedbacksByRevisor()`
+  * `getAllFeedbacks()`
+- Atualizado UI em `client/src/pages/Feedbacks.tsx` para exibir ícone 💬 + número
+- Contador aparece apenas quando `commentCount > 0`
+
+**Resultado:**
+- Feedbacks com comentários mostram ícone de mensagem e quantidade
+- Feedbacks sem comentários mantêm interface limpa
+- Melhora significativa na usabilidade e navegação
+
+---
+
 ## [1.0.6] - 2025-11-06
 
 ### 🐛 Correção - Session Payload (ENV.appId)

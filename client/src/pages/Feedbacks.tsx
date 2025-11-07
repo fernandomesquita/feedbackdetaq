@@ -166,6 +166,12 @@ export default function Feedbacks() {
                                 locale: ptBR,
                               })}
                             </span>
+                            {item.commentCount > 0 && (
+                              <span className="flex items-center gap-1">
+                                <MessageSquare className="h-4 w-4" />
+                                {item.commentCount}
+                              </span>
+                            )}
                           </div>
 
                           {feedback.categories && feedback.categories.length > 0 && (

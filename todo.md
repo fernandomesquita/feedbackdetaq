@@ -254,4 +254,13 @@
 - [x] Problema: ENV.appId usa VITE_APP_ID que não existe no Railway
 - [x] Corrigir env.ts para usar valor fixo ao invés de VITE_APP_ID
 - [x] Testar localmente (LOGIN FUNCIONANDO PERFEITAMENTE!)
+- [x] Commit e push para GitHub
+
+## CONTADOR DE COMENTÁRIOS NOS CARDS (06/11/2025 - 23:14)
+- [x] Modificar query de feedbacks para incluir contagem de comentários
+- [x] Adicionar commentCount em getFeedbacksByTaquigrafo
+- [x] Adicionar commentCount em getFeedbacksByRevisor
+- [x] Adicionar commentCount em getAllFeedbacks
+- [x] Atualizar UI do card de feedback para exibir ícone + número
+- [x] Testar com feedbacks com e sem comentários (FUNCIONANDO!)
 - [ ] Commit e push
