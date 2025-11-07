@@ -235,4 +235,14 @@
 - [x] Verificar lógica de redirect após autenticação
 - [x] Corrigir redirect para dashboard (mudado de "/" para "/dashboard")
 - [x] Testar login localmente (SUCESSO! Redirecionou para dashboard)
+- [x] Commit e push para GitHub
+
+## CORREÇÃO DASHBOARDLAYOUT - OAUTH (06/11/2025 - 22:16)
+- [x] Investigar DashboardLayout (usa useAuthWithProfile corretamente)
+- [x] Verificar useAuth e lógica de autenticação (funciona localmente)
+- [x] Testar dashboard após login (FUNCIONA LOCALMENTE)
+- [x] Verificar banco Railway (49 usuários, dados OK)
+- [x] Problema: Railway não autentica (cookie ou JWT_SECRET)
+- [x] Ajustar configuração de cookies para Railway (sameSite: lax)
+- [x] Testar localmente (TypeScript sem erros)
 - [ ] Commit e push

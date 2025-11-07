@@ -6,6 +6,33 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.0.5] - 2025-11-06
+
+### 🐛 Correção - Autenticação Railway (Cookie SameSite)
+
+**Problema Identificado:**
+
+Após login no Railway, o dashboard mostrava "Please sign in to continue" mesmo com credenciais válidas. O sistema funcionava perfeitamente em ambiente local mas falhava em produção.
+
+**Causa:**
+- Cookie configurado com `sameSite: "none"` que requer contexto cross-site
+- Railway usa domínio próprio (.railway.app) que não é cross-site
+- Navegadores modernos bloqueiam cookies `sameSite: none` em alguns contextos
+
+**Solução:**
+- Alterado `sameSite` de `"none"` para `"lax"` em `server/_core/cookies.ts`
+- `sameSite: "lax"` permite cookies em navegação normal (GET requests)
+- Mantido `httpOnly: true` e `secure: true` para segurança
+
+**Teste:**
+- Sistema local continua funcionando perfeitamente
+- Aguardando teste em produção Railway após deploy
+
+**Arquivos Alterados:**
+- `server/_core/cookies.ts` - Ajustado sameSite para "lax"
+
+---
+
 ## [1.0.4] - 2025-11-06
 
 ### 🐛 Correção - Redirect Pós-Login
