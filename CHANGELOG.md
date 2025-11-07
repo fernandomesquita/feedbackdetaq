@@ -6,6 +6,33 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.0.3] - 2025-11-06
+
+### 🐛 Correção - Seed de Produção no Railway
+
+**Problema Identificado:**
+
+O seed inicial foi executado no banco **local** (TiDB) ao invés do banco de **produção** (Railway MySQL), resultando em tabelas vazias no Railway.
+
+**Causa:**
+- A variável `DATABASE_URL` aponta para o TiDB local por padrão
+- O seed deve usar `mysql_public_url` para acessar o Railway
+
+**Solução:**
+- Executado seed com `DATABASE_URL="$mysql_public_url" node seed-production.mjs`
+- Dados inseridos com sucesso no banco de produção do Railway
+
+**Documentação Atualizada:**
+- Adicionada seção "🌱 Seed de Produção" no README.md
+- Alerta sobre uso correto de `mysql_public_url` vs `DATABASE_URL`
+- Instruções claras para evitar erro no futuro
+
+**Arquivos Alterados:**
+- `README.md` - Nova seção com alerta sobre seed de produção
+- `todo.md` - Documentada correção
+
+---
+
 ## [1.0.2] - 2025-11-06
 
 ### 🌱 Seed de Produção

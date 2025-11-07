@@ -221,4 +221,11 @@
 - [x] Executar script no banco de produção (SUCESSO!)
 - [x] Validar dados inseridos (49 usuários, 10 feedbacks, 3 avisos, 10 termos)
 - [x] Atualizar CHANGELOG.md com documentação do seed
-- [ ] Commit e push
+- [x] Commit e push para GitHub
+
+## CORREÇÃO SEED PRODUÇÃO - Railway MySQL (06/11/2025 - 22:06)
+- [x] Verificar DATABASE_URL atual (estava apontando para TiDB local)
+- [x] Obter URL correta do MySQL Railway (mysql_public_url encontrada)
+- [x] Executar seed com mysql_public_url do Railway (SUCESSO!)
+- [ ] Validar dados inseridos no Railway (aguardando confirmação do usuário)
+- [x] Adicionar alerta na documentação sobre usar mysql_public_url

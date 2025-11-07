@@ -169,6 +169,26 @@ DATABASE_URL="$mysql_public_url" pnpm db:push
 
 **IMPORTANTE**: Nunca assuma que o banco está sincronizado. Sempre execute os dois comandos acima antes de fazer deploy!
 
+### 🌱 Seed de Produção
+
+**ATENÇÃO**: Para popular o banco de produção (Railway), use a variável `mysql_public_url`:
+
+```bash
+# Executar seed no banco de PRODUÇÃO (Railway MySQL)
+DATABASE_URL="$mysql_public_url" node seed-production.mjs
+```
+
+**NÃO use** `DATABASE_URL` sem especificar, pois ela aponta para o TiDB local!
+
+**Dados inseridos pelo seed:**
+- 9 usuários de teste (3 diretores, 3 revisores, 3 taquígrafos)
+- 5 feedbacks de exemplo
+- 4 comentários
+- 5 reações
+- 3 avisos
+- 10 termos de padronização
+- Senha padrão: `abccbaabc`
+
 ### 🔄 Commit e Push
 
 Quando mencionado "commit" ou "push", sempre se refere a:
