@@ -6,6 +6,38 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.0.1] - 2025-11-06
+
+### 🐛 Correções
+
+**Correção de Erro de Deploy no Railway**
+
+O deploy estava falhando com erro "Invalid URL" devido à inicialização do código OAuth mesmo com as rotas comentadas.
+
+**Problema Identificado:**
+- O arquivo `server/_core/sdk.ts` estava inicializando o OAuth client no momento de importação
+- A variável `ENV.oAuthServerUrl` estava sendo acessada mesmo sem estar configurada no Railway
+- Isso causava erro "Invalid URL" ao tentar criar o HTTP client do OAuth
+
+**Solução Implementada:**
+1. Comentada a inicialização do OAuth em `server/_core/sdk.ts`
+2. Comentada a variável `ENV.oAuthServerUrl` em `server/_core/env.ts`
+3. Removida referência a `ENV.oAuthServerUrl` na função `createOAuthHttpClient`
+4. Sistema agora usa APENAS autenticação local (email/senha)
+
+**Arquivos Alterados:**
+- `server/_core/sdk.ts` - Comentada linha de inicialização do OAuth
+- `server/_core/env.ts` - Comentada variável oAuthServerUrl
+- `todo.md` - Documentada correção
+
+**Resultado:**
+- TypeScript sem erros
+- Servidor local funcionando corretamente
+- Código enviado para GitHub
+- Deploy no Railway aguardando rebuild automático
+
+---
+
 ## [1.0.0] - 2025-11-06 🎉
 
 ### 🚀 DEPLOY EM PRODUÇÃO

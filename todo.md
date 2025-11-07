@@ -200,4 +200,4 @@
 - [x] Remover referência a ENV.oAuthServerUrl em createOAuthHttpClient
 - [x] Testar localmente (TypeScript sem erros)
 - [x] Commit e push para GitHub
-- [ ] Verificar deploy no Railway
+- [x] Verificar deploy no Railway (aguardando rebuild automático)
