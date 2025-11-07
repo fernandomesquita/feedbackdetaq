@@ -6,6 +6,32 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.0.4] - 2025-11-06
+
+### 🐛 Correção - Redirect Pós-Login
+
+**Problema Identificado:**
+
+Após fazer login, o sistema redirecionava para a página inicial (`/`) que então tentava redirecionar para `/dashboard`, criando um loop de redirecionamento.
+
+**Causa:**
+- `Login.tsx` redirecionava para `/` após login bem-sucedido
+- `Home.tsx` tem um `useEffect` que redireciona usuários autenticados para `/dashboard`
+- O contexto de autenticação não estava atualizado imediatamente após o reload
+
+**Solução:**
+- Alterado redirect em `Login.tsx` de `window.location.href = "/"` para `window.location.href = "/dashboard"`
+- Login agora redireciona diretamente para o dashboard, evitando o loop
+
+**Teste:**
+- Login testado localmente com sucesso
+- Usuário redirecionado corretamente para `/dashboard` após autenticação
+
+**Arquivos Alterados:**
+- `client/src/pages/Login.tsx` - Redirect alterado para `/dashboard`
+
+---
+
 ## [1.0.3] - 2025-11-06
 
 ### 🐛 Correção - Seed de Produção no Railway

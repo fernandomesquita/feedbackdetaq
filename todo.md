@@ -229,3 +229,10 @@
 - [x] Executar seed com mysql_public_url do Railway (SUCESSO!)
 - [ ] Validar dados inseridos no Railway (aguardando confirmação do usuário)
 - [x] Adicionar alerta na documentação sobre usar mysql_public_url
+
+## CORREÇÃO REDIRECT PÓS-LOGIN (06/11/2025 - 22:11)
+- [x] Investigar página de Login
+- [x] Verificar lógica de redirect após autenticação
+- [x] Corrigir redirect para dashboard (mudado de "/" para "/dashboard")
+- [x] Testar login localmente (SUCESSO! Redirecionou para dashboard)
+- [ ] Commit e push
