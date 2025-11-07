@@ -1,0 +1,49 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "audit_logs"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "aviso_reads"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "aviso_views"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "avisos"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "comments"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "feedbacks"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "padronizacao"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "padronizacao_reads"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "reactions"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "templates"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "user_profiles"
+    },
+    {
+      "Tables_in_9zE73htpVWWwZuSpph9XMp": "users"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_9zE73htpVWWwZuSpph9XMp\n__drizzle_migrations\naudit_logs\naviso_reads\naviso_views\navisos\ncomments\nfeedbacks\npadronizacao\npadronizacao_reads\nreactions\ntemplates\nuser_profiles\nusers\n",
+  "stderr": "",
+  "execution_time_ms": 66
+}
