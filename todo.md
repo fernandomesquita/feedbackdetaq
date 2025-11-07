@@ -193,3 +193,11 @@
 - [x] Investigar por que badge de notificação não aparece
 - [x] Corrigir query getUnreadPadronizacaoCount (usar isNull ao invés de eq com NULL)
 - [x] Atualizar CHANGELOG com alterações finais
+
+## CORREÇÃO ERRO DEPLOY RAILWAY (06/11/2025 - 21:39)
+- [x] Remover inicialização do OAuth em server/_core/sdk.ts
+- [x] Comentar ENV.oAuthServerUrl em server/_core/env.ts
+- [x] Remover referência a ENV.oAuthServerUrl em createOAuthHttpClient
+- [x] Testar localmente (TypeScript sem erros)
+- [x] Commit e push para GitHub
+- [ ] Verificar deploy no Railway
