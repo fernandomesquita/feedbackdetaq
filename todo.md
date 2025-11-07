@@ -200,4 +200,13 @@
 - [x] Remover referência a ENV.oAuthServerUrl em createOAuthHttpClient
 - [x] Testar localmente (TypeScript sem erros)
 - [x] Commit e push para GitHub
+- [x] Verificar deploy no Railway (aguardando rebuild automático)
+
+## INVESTIGAÇÃO COMPLETA ERRO OAUTH (06/11/2025 - 21:47)
+- [x] Buscar TODAS as referências a OAuth no código
+- [x] Verificar arquivos em server/_core/
+- [x] Identificar problema: getLoginUrl() em client/src/const.ts tentava acessar VITE_OAUTH_PORTAL_URL
+- [x] Corrigir getLoginUrl() para retornar "/login" diretamente
+- [x] Testar localmente (TypeScript sem erros)
+- [ ] Commit e push
 - [ ] Verificar deploy no Railway
