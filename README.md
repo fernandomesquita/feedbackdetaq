@@ -133,6 +133,50 @@ sistema-feedback-taquigrafia/
 9. **templates** - Templates de feedback (futuro)
 10. **audit_logs** - Logs de auditoria (futuro)
 
+## ⚠️ ALERTAS IMPORTANTES
+
+### 🗄️ Deploy e Atualização de Banco de Dados
+
+**ATENÇÃO**: Este projeto usa **dois bancos de dados diferentes**:
+
+1. **TiDB Local** (desenvolvimento no Manus)
+   - URL: Configurada automaticamente no ambiente Manus
+   - Uso: Desenvolvimento e testes locais
+
+2. **MySQL Railway** (produção)
+   - URL: `$mysql_public_url` (nos segredos do Manus)
+   - Uso: Deploy em produção via Railway
+
+**PROCEDIMENTO OBRIGATÓRIO PARA DEPLOY:**
+
+Sempre que fizer alterações no schema (`drizzle/schema.ts`), você DEVE atualizar AMBOS os bancos:
+
+```bash
+# 1. Atualizar banco LOCAL (TiDB) - desenvolvimento
+pnpm db:push
+
+# 2. Atualizar banco RAILWAY (MySQL) - produção
+DATABASE_URL="$mysql_public_url" pnpm db:push
+```
+
+**CHECKLIST ANTES DE CADA PUSH PARA GITHUB/RAILWAY:**
+
+- [ ] Schema atualizado no banco LOCAL (TiDB)?
+- [ ] Schema atualizado no banco RAILWAY (MySQL)?
+- [ ] Testado localmente?
+- [ ] Commit e push para GitHub realizado?
+- [ ] Variáveis de ambiente configuradas no Railway?
+
+**IMPORTANTE**: Nunca assuma que o banco está sincronizado. Sempre execute os dois comandos acima antes de fazer deploy!
+
+### 🔄 Commit e Push
+
+Quando mencionado "commit" ou "push", sempre se refere a:
+- **GitHub**: `https://github.com/fernandomesquita/feedbackdetaq`
+- **Railway**: Deploy automático via GitHub
+
+---
+
 ## 🚀 Como Executar
 
 ### Pré-requisitos
