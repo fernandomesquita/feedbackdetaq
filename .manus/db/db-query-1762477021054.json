@@ -1,0 +1,16 @@
+{
+  "query": "SELECT \n  (SELECT COUNT(*) FROM avisos) as total_avisos,\n  (SELECT COUNT(*) FROM padronizacao) as total_termos,\n  (SELECT COUNT(*) FROM comments) as total_comentarios,\n  (SELECT COUNT(*) FROM reactions) as total_reacoes",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT \n  (SELECT COUNT(*) FROM avisos) as total_avisos,\n  (SELECT COUNT(*) FROM padronizacao) as total_termos,\n  (SELECT COUNT(*) FROM comments) as total_comentarios,\n  (SELECT COUNT(*) FROM reactions) as total_reacoes",
+  "rows": [
+    {
+      "total_avisos": "9",
+      "total_termos": "24",
+      "total_comentarios": "17",
+      "total_reacoes": "21"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_avisos\ttotal_termos\ttotal_comentarios\ttotal_reacoes\n9\t24\t17\t21\n",
+  "stderr": "",
+  "execution_time_ms": 65
+}

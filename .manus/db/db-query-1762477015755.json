@@ -1,0 +1,100 @@
+{
+  "query": "SELECT f.id, f.title, f.type, f.sessionNum, f.rating, \n       ur.name as revisor, ut.name as taquigrafo\nFROM feedbacks f\nINNER JOIN users ur ON f.revisorId = ur.id\nINNER JOIN users ut ON f.taquigId = ut.id\nORDER BY f.id DESC\nLIMIT 10",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT f.id, f.title, f.type, f.sessionNum, f.rating, \n       ur.name as revisor, ut.name as taquigrafo\nFROM feedbacks f\nINNER JOIN users ur ON f.revisorId = ur.id\nINNER JOIN users ut ON f.taquigId = ut.id\nORDER BY f.id DESC\nLIMIT 10",
+  "rows": [
+    {
+      "id": "30020",
+      "title": "Abreviações não padronizadas",
+      "type": "CORRETIVO",
+      "sessionNum": "78127",
+      "rating": "3",
+      "revisor": "Pedro Oliveira",
+      "taquigrafo": "Rafael Mendes"
+    },
+    {
+      "id": "30019",
+      "title": "Melhora significativa",
+      "type": "POSITIVO",
+      "sessionNum": "78126",
+      "rating": "4",
+      "revisor": "Julia Ferreira",
+      "taquigrafo": "Lucas Almeida"
+    },
+    {
+      "id": "30018",
+      "title": "Pontuação precisa ser revisada",
+      "type": "CORRETIVO",
+      "sessionNum": "78125",
+      "rating": "3",
+      "revisor": "Mariana Costa",
+      "taquigrafo": "Rafael Mendes"
+    },
+    {
+      "id": "30017",
+      "title": "Excelente trabalho na sessão 78124",
+      "type": "POSITIVO",
+      "sessionNum": "78124",
+      "rating": "5",
+      "revisor": "Pedro Oliveira",
+      "taquigrafo": "Beatriz Rocha"
+    },
+    {
+      "id": "30016",
+      "title": "Atenção aos termos técnicos",
+      "type": "CORRETIVO",
+      "sessionNum": "78123",
+      "rating": "3",
+      "revisor": "Mariana Costa",
+      "taquigrafo": "Lucas Almeida"
+    },
+    {
+      "id": "30015",
+      "title": "Abreviações não padronizadas",
+      "type": "CORRETIVO",
+      "sessionNum": "78127",
+      "rating": "3",
+      "revisor": "Pedro Oliveira",
+      "taquigrafo": "Rafael Mendes"
+    },
+    {
+      "id": "30014",
+      "title": "Melhora significativa",
+      "type": "POSITIVO",
+      "sessionNum": "78126",
+      "rating": "4",
+      "revisor": "Julia Ferreira",
+      "taquigrafo": "Lucas Almeida"
+    },
+    {
+      "id": "30013",
+      "title": "Pontuação precisa ser revisada",
+      "type": "CORRETIVO",
+      "sessionNum": "78125",
+      "rating": "3",
+      "revisor": "Mariana Costa",
+      "taquigrafo": "Rafael Mendes"
+    },
+    {
+      "id": "30012",
+      "title": "Excelente trabalho na sessão 78124",
+      "type": "POSITIVO",
+      "sessionNum": "78124",
+      "rating": "5",
+      "revisor": "Pedro Oliveira",
+      "taquigrafo": "Beatriz Rocha"
+    },
+    {
+      "id": "30011",
+      "title": "Atenção aos termos técnicos",
+      "type": "CORRETIVO",
+      "sessionNum": "78123",
+      "rating": "3",
+      "revisor": "Mariana Costa",
+      "taquigrafo": "Lucas Almeida"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\ttitle\ttype\tsessionNum\trating\trevisor\ttaquigrafo\n30020\tAbreviações não padronizadas\tCORRETIVO\t78127\t3\tPedro Oliveira\tRafael Mendes\n30019\tMelhora significativa\tPOSITIVO\t78126\t4\tJulia Ferreira\tLucas Almeida\n30018\tPontuação precisa ser revisada\tCORRETIVO\t78125\t3\tMariana Costa\tRafael Mendes\n30017\tExcelente trabalho na sessão 78124\tPOSITIVO\t78124\t5\tPedro Oliveira\tBeatriz Rocha\n30016\tAtenção aos termos técnicos\tCORRETIVO\t78123\t3\tMariana Costa\tLucas Almeida\n30015\tAbreviações não padronizadas\tCORRETIVO\t78127\t3\tPedro Oliveira\tRafael Mendes\n30014\tMelhora significativa\tPOSITIVO\t78126\t4\tJulia Ferreira\tLucas Almeida\n30013\tPontuação precisa ser revisada\tCORRETIVO\t78125\t3\tMariana Costa\tRafael Mendes\n30012\tExcelente trabalho na sessão 78124\tPOSITIVO\t78124\t5\tPedro Oliveira\tBeatriz Rocha\n30011\tAtenção aos termos técnicos\tCORRETIVO\t78123\t3\tMariana Costa\tLucas Almeida\n",
+  "stderr": "",
+  "execution_time_ms": 51
+}

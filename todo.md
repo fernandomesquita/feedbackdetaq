@@ -208,5 +208,17 @@
 - [x] Identificar problema: getLoginUrl() em client/src/const.ts tentava acessar VITE_OAUTH_PORTAL_URL
 - [x] Corrigir getLoginUrl() para retornar "/login" diretamente
 - [x] Testar localmente (TypeScript sem erros)
-- [ ] Commit e push
+- [x] Commit e push para GitHub
 - [ ] Verificar deploy no Railway
+
+## SEED DO BANCO DE PRODUÇÃO (06/11/2025 - 21:52)
+- [x] Criar script seed-production.mjs
+- [x] Criar 3 diretores, 3 revisores, 3 taquígrafos (com senhas)
+- [x] Criar feedbacks de exemplo entre revisores e taquígrafos
+- [x] Criar avisos de diferentes tipos e públicos
+- [x] Criar termos de padronização no glossário
+- [x] Criar comentários e reações nos feedbacks
+- [x] Executar script no banco de produção (SUCESSO!)
+- [x] Validar dados inseridos (49 usuários, 10 feedbacks, 3 avisos, 10 termos)
+- [x] Atualizar CHANGELOG.md com documentação do seed
+- [ ] Commit e push

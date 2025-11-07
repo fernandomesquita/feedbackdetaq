@@ -6,6 +6,43 @@ O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.
 
 ---
 
+## [1.0.2] - 2025-11-06
+
+### 🌱 Seed de Produção
+
+**População do Banco de Dados de Produção**
+
+O banco de dados de produção foi populado com dados de teste completos para demonstração do sistema.
+
+**Dados Inseridos:**
+- **9 Usuários de Teste:**
+  - 3 Diretores: diretor1@test.com, diretor2@test.com, diretor3@test.com
+  - 3 Revisores: revisor1@test.com, revisor2@test.com, revisor3@test.com
+  - 3 Taquígrafos: taquigrafo1@test.com, taquigrafo2@test.com, taquigrafo3@test.com
+  - Senha padrão para todos: `abccbaabc`
+
+- **5 Feedbacks:** Exemplos de feedbacks corretivos e positivos entre revisores e taquígrafos
+- **4 Comentários:** Interações nos feedbacks
+- **5 Reações:** Reações do tipo ENTENDI, OBRIGADO, VOU_MELHORAR
+- **3 Avisos:** Avisos de diferentes tipos (URGENTE, COTIDIANO, RECORRENTE) e públicos-alvo
+- **10 Termos de Padronização:** Glossário com termos técnicos parlamentares
+
+**Script Criado:**
+- `seed-production.mjs` - Script Node.js para popular o banco de produção
+- Usa conexão direta com MySQL via DATABASE_URL
+- Cria dados relacionados corretamente (feedbacks com revisores/taquígrafos, comentários, reações)
+
+**Validação:**
+- 49 usuários totais no banco (incluindo usuários anteriores)
+- 10 feedbacks com relacionamentos corretos
+- 3 avisos ativos
+- 10 termos no glossário
+
+**Arquivos Criados:**
+- `seed-production.mjs` - Script de seed para produção
+
+---
+
 ## [1.0.1] - 2025-11-06
 
 ### 🐛 Correções
@@ -34,6 +71,30 @@ O deploy estava falhando com erro "Invalid URL" devido à inicialização do có
 - TypeScript sem erros
 - Servidor local funcionando corretamente
 - Código enviado para GitHub
+- Deploy no Railway aguardando rebuild automático
+
+**Segunda Correção - getLoginUrl()**
+
+O erro persistia porque a função `getLoginUrl()` no frontend ainda tentava acessar variáveis de ambiente OAuth que não existem no Railway.
+
+**Problema Identificado:**
+- A função `getLoginUrl()` em `client/src/const.ts` tentava acessar `VITE_OAUTH_PORTAL_URL` e `VITE_APP_ID`
+- Essas variáveis não estão configuradas no Railway (propositalmente removidas)
+- Isso causava erro "Invalid URL" ao tentar construir a URL de login
+
+**Solução Implementada:**
+- Simplificada a função `getLoginUrl()` para retornar diretamente `"/login"`
+- Removida toda lógica de construção de URL OAuth
+- Sistema agora redireciona para página de login local
+
+**Arquivos Alterados:**
+- `client/src/const.ts` - Simplificada função getLoginUrl()
+- `todo.md` - Documentada investigação e correção
+
+**Resultado:**
+- TypeScript sem erros
+- Sistema local funcionando corretamente
+- Código sincronizado no GitHub
 - Deploy no Railway aguardando rebuild automático
 
 ---

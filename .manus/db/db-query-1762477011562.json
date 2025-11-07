@@ -1,0 +1,304 @@
+{
+  "query": "SELECT u.id, u.name, u.email, up.feedbackRole \nFROM users u \nINNER JOIN user_profiles up ON u.id = up.userId \nWHERE u.email LIKE '%@test.com'\nORDER BY up.feedbackRole, u.name",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3FZ1nxfVKsSpRCQ.f7a1fd702356 --database 9zE73htpVWWwZuSpph9XMp --execute SELECT u.id, u.name, u.email, up.feedbackRole \nFROM users u \nINNER JOIN user_profiles up ON u.id = up.userId \nWHERE u.email LIKE '%@test.com'\nORDER BY up.feedbackRole, u.name",
+  "rows": [
+    {
+      "id": "30209",
+      "name": "Master Admin",
+      "email": "master@test.com",
+      "feedbackRole": "MASTER"
+    },
+    {
+      "id": "120188",
+      "name": "Ana Santos",
+      "email": "diretor2@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120178",
+      "name": "Ana Santos",
+      "email": "diretor2@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120209",
+      "name": "Ana Santos",
+      "email": "diretor2@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120200",
+      "name": "Ana Santos",
+      "email": "diretor2@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120167",
+      "name": "Ana Santos",
+      "email": "diretor2@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120166",
+      "name": "Carlos Silva",
+      "email": "diretor1@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120208",
+      "name": "Carlos Silva",
+      "email": "diretor1@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120187",
+      "name": "Carlos Silva",
+      "email": "diretor1@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120199",
+      "name": "Carlos Silva",
+      "email": "diretor1@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120177",
+      "name": "Carlos Silva",
+      "email": "diretor1@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "30210",
+      "name": "Diretor Silva",
+      "email": "diretor@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120168",
+      "name": "Roberto Lima",
+      "email": "diretor3@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120201",
+      "name": "Roberto Lima",
+      "email": "diretor3@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120189",
+      "name": "Roberto Lima",
+      "email": "diretor3@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120210",
+      "name": "Roberto Lima",
+      "email": "diretor3@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120179",
+      "name": "Roberto Lima",
+      "email": "diretor3@test.com",
+      "feedbackRole": "DIRETOR"
+    },
+    {
+      "id": "120204",
+      "name": "Julia Ferreira",
+      "email": "revisor3@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120192",
+      "name": "Julia Ferreira",
+      "email": "revisor3@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120171",
+      "name": "Julia Ferreira",
+      "email": "revisor3@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120182",
+      "name": "Julia Ferreira",
+      "email": "revisor3@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120213",
+      "name": "Julia Ferreira",
+      "email": "revisor3@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120180",
+      "name": "Mariana Costa",
+      "email": "revisor1@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120202",
+      "name": "Mariana Costa",
+      "email": "revisor1@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120190",
+      "name": "Mariana Costa",
+      "email": "revisor1@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120211",
+      "name": "Mariana Costa",
+      "email": "revisor1@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120169",
+      "name": "Mariana Costa",
+      "email": "revisor1@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120212",
+      "name": "Pedro Oliveira",
+      "email": "revisor2@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120191",
+      "name": "Pedro Oliveira",
+      "email": "revisor2@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120181",
+      "name": "Pedro Oliveira",
+      "email": "revisor2@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120170",
+      "name": "Pedro Oliveira",
+      "email": "revisor2@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120203",
+      "name": "Pedro Oliveira",
+      "email": "revisor2@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "30211",
+      "name": "Revisor Santos",
+      "email": "revisor@test.com",
+      "feedbackRole": "REVISOR"
+    },
+    {
+      "id": "120194",
+      "name": "Beatriz Rocha",
+      "email": "taquigrafo2@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120215",
+      "name": "Beatriz Rocha",
+      "email": "taquigrafo2@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120184",
+      "name": "Beatriz Rocha",
+      "email": "taquigrafo2@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120173",
+      "name": "Beatriz Rocha",
+      "email": "taquigrafo2@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120206",
+      "name": "Beatriz Rocha",
+      "email": "taquigrafo2@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120172",
+      "name": "Lucas Almeida",
+      "email": "taquigrafo1@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120205",
+      "name": "Lucas Almeida",
+      "email": "taquigrafo1@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120193",
+      "name": "Lucas Almeida",
+      "email": "taquigrafo1@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120214",
+      "name": "Lucas Almeida",
+      "email": "taquigrafo1@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120183",
+      "name": "Lucas Almeida",
+      "email": "taquigrafo1@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120207",
+      "name": "Rafael Mendes",
+      "email": "taquigrafo3@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120195",
+      "name": "Rafael Mendes",
+      "email": "taquigrafo3@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120174",
+      "name": "Rafael Mendes",
+      "email": "taquigrafo3@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120185",
+      "name": "Rafael Mendes",
+      "email": "taquigrafo3@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "120216",
+      "name": "Rafael Mendes",
+      "email": "taquigrafo3@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    },
+    {
+      "id": "30212",
+      "name": "Taquígrafo João",
+      "email": "taquigrafo@test.com",
+      "feedbackRole": "TAQUIGRAFO"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tname\temail\tfeedbackRole\n30209\tMaster Admin\tmaster@test.com\tMASTER\n120188\tAna Santos\tdiretor2@test.com\tDIRETOR\n120178\tAna Santos\tdiretor2@test.com\tDIRETOR\n120209\tAna Santos\tdiretor2@test.com\tDIRETOR\n120200\tAna Santos\tdiretor2@test.com\tDIRETOR\n120167\tAna Santos\tdiretor2@test.com\tDIRETOR\n120166\tCarlos Silva\tdiretor1@test.com\tDIRETOR\n120208\tCarlos Silva\tdiretor1@test.com\tDIRETOR\n120187\tCarlos Silva\tdiretor1@test.com\tDIRETOR\n120199\tCarlos Silva\tdiretor1@test.com\tDIRETOR\n120177\tCarlos Silva\tdiretor1@test.com\tDIRETOR\n30210\tDiretor Silva\tdiretor@test.com\tDIRETOR\n120168\tRoberto Lima\tdiretor3@test.com\tDIRETOR\n120201\tRoberto Lima\tdiretor3@test.com\tDIRETOR\n120189\tRoberto Lima\tdiretor3@test.com\tDIRETOR\n120210\tRoberto Lima\tdiretor3@test.com\tDIRETOR\n120179\tRoberto Lima\tdiretor3@test.com\tDIRETOR\n120204\tJulia Ferreira\trevisor3@test.com\tREVISOR\n120192\tJulia Ferreira\trevisor3@test.com\tREVISOR\n120171\tJulia Ferreira\trevisor3@test.com\tREVISOR\n120182\tJulia Ferreira\trevisor3@test.com\tREVISOR\n120213\tJulia Ferreira\trevisor3@test.com\tREVISOR\n120180\tMariana Costa\trevisor1@test.com\tREVISOR\n120202\tMariana Costa\trevisor1@test.com\tREVISOR\n120190\tMariana Costa\trevisor1@test.com\tREVISOR\n120211\tMariana Costa\trevisor1@test.com\tREVISOR\n120169\tMariana Costa\trevisor1@test.com\tREVISOR\n120212\tPedro Oliveira\trevisor2@test.com\tREVISOR\n120191\tPedro Oliveira\trevisor2@test.com\tREVISOR\n120181\tPedro Oliveira\trevisor2@test.com\tREVISOR\n120170\tPedro Oliveira\trevisor2@test.com\tREVISOR\n120203\tPedro Oliveira\trevisor2@test.com\tREVISOR\n30211\tRevisor Santos\trevisor@test.com\tREVISOR\n120194\tBeatriz Rocha\ttaquigrafo2@test.com\tTAQUIGRAFO\n120215\tBeatriz Rocha\ttaquigrafo2@test.com\tTAQUIGRAFO\n120184\tBeatriz Rocha\ttaquigrafo2@test.com\tTAQUIGRAFO\n120173\tBeatriz Rocha\ttaquigrafo2@test.com\tTAQUIGRAFO\n120206\tBeatriz Rocha\ttaquigrafo2@test.com\tTAQUIGRAFO\n120172\tLucas Almeida\ttaquigrafo1@test.com\tTAQUIGRAFO\n120205\tLucas Almeida\ttaquigrafo1@test.com\tTAQUIGRAFO\n120193\tLucas Almeida\ttaquigrafo1@test.com\tTAQUIGRAFO\n120214\tLucas Almeida\ttaquigrafo1@test.com\tTAQUIGRAFO\n120183\tLucas Almeida\ttaquigrafo1@test.com\tTAQUIGRAFO\n120207\tRafael Mendes\ttaquigrafo3@test.com\tTAQUIGRAFO\n120195\tRafael Mendes\ttaquigrafo3@test.com\tTAQUIGRAFO\n120174\tRafael Mendes\ttaquigrafo3@test.com\tTAQUIGRAFO\n120185\tRafael Mendes\ttaquigrafo3@test.com\tTAQUIGRAFO\n120216\tRafael Mendes\ttaquigrafo3@test.com\tTAQUIGRAFO\n30212\tTaquígrafo João\ttaquigrafo@test.com\tTAQUIGRAFO\n",
+  "stderr": "",
+  "execution_time_ms": 73
+}
