@@ -80,6 +80,10 @@ export default function Estatisticas() {
     taquigrafos: Number(item.totalTaquigrafos || 0),
   })) || [];
 
+  // Debug: Log dos dados
+  console.log('quesitoStats raw:', quesitoStats);
+  console.log('quesitoData transformed:', quesitoData);
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -317,7 +321,7 @@ export default function Estatisticas() {
         </div>
 
         {/* Quesitos Mais Usados (apenas para MASTER/DIRETOR) */}
-        {canViewAll && quesitoData.length > 0 && (
+        {canViewAll && (
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -327,36 +331,45 @@ export default function Estatisticas() {
               <CardDescription>Distribuição de uso dos quesitos nos feedbacks</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={400}>
-                <BarChart data={quesitoData} layout="vertical" margin={{ left: 120, right: 30 }}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis type="number" />
-                  <YAxis type="category" dataKey="name" width={110} />
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="bg-background border rounded-lg p-3 shadow-lg">
-                            <p className="font-semibold mb-2">{payload[0].payload.name}</p>
-                            <p className="text-sm text-muted-foreground">
-                              Usos totais: <span className="font-semibold text-foreground">{payload[0].value}</span>
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Revisores: <span className="font-semibold text-foreground">{payload[0].payload.revisores}</span>
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              Taquígrafos: <span className="font-semibold text-foreground">{payload[0].payload.taquigrafos}</span>
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Legend />
-                  <Bar dataKey="usos" fill="#8b5cf6" name="Quantidade de Usos" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
+              {quesitoData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={400}>
+                  <BarChart data={quesitoData} layout="vertical" margin={{ left: 120, right: 30 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis type="category" dataKey="name" width={110} />
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="bg-background border rounded-lg p-3 shadow-lg">
+                              <p className="font-semibold mb-2">{payload[0].payload.name}</p>
+                              <p className="text-sm text-muted-foreground">
+                                Usos totais: <span className="font-semibold text-foreground">{payload[0].value}</span>
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Revisores: <span className="font-semibold text-foreground">{payload[0].payload.revisores}</span>
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                Taquígrafos: <span className="font-semibold text-foreground">{payload[0].payload.taquigrafos}</span>
+                              </p>
+                            </div>
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Legend />
+                    <Bar dataKey="usos" fill="#8b5cf6" name="Quantidade de Usos" radius={[0, 4, 4, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex items-center justify-center h-[400px] text-muted-foreground">
+                  <div className="text-center">
+                    <p>Nenhum quesito foi utilizado em feedbacks ainda.</p>
+                    <p className="text-sm mt-2">Crie feedbacks com quesitos para ver as estatísticas aqui.</p>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
