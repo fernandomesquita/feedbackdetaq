@@ -7,8 +7,8 @@ export async function createFeedback(feedback: InsertFeedback) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const [result] = await db.insert(feedbacks).values(feedback).$returningId();
-  return result;
+  const result = await db.insert(feedbacks).values(feedback);
+  return { insertId: result[0].insertId };
 }
 
 export async function getFeedbackById(id: number) {

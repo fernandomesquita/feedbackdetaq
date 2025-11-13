@@ -45,36 +45,35 @@ async function runMigrations() {
       "SHOW TABLES LIKE 'quesitos'"
     );
 
-    if ((tables as any[]).length > 0) {
-      console.log('[Migration] Table "quesitos" already exists, skipping migration');
-      return;
+    if ((tables as any[]).length === 0) {
+      console.log('[Migration] Creating table "quesitos"...');
+
+      // Create quesitos table
+      await connection.query(`
+        CREATE TABLE \`quesitos\` (
+          \`id\` int AUTO_INCREMENT NOT NULL,
+          \`titulo\` varchar(255) NOT NULL,
+          \`descricao\` text,
+          \`ordem\` int NOT NULL DEFAULT 0,
+          \`isActive\` boolean NOT NULL DEFAULT true,
+          \`userId\` int NOT NULL,
+          \`createdAt\` timestamp NOT NULL DEFAULT (now()),
+          \`updatedAt\` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+          CONSTRAINT \`quesitos_id\` PRIMARY KEY(\`id\`)
+        )
+      `);
+
+      console.log('[Migration] Creating indexes for quesitos...');
+
+      // Create indexes
+      await connection.query('CREATE INDEX `user_idx` ON `quesitos` (`userId`)');
+      await connection.query('CREATE INDEX `ordem_idx` ON `quesitos` (`ordem`)');
+      await connection.query('CREATE INDEX `is_active_idx` ON `quesitos` (`isActive`)');
+
+      console.log('[Migration] ✓ Table "quesitos" created successfully');
+    } else {
+      console.log('[Migration] Table "quesitos" already exists, skipping');
     }
-
-    console.log('[Migration] Creating table "quesitos"...');
-
-    // Create quesitos table
-    await connection.query(`
-      CREATE TABLE \`quesitos\` (
-        \`id\` int AUTO_INCREMENT NOT NULL,
-        \`titulo\` varchar(255) NOT NULL,
-        \`descricao\` text,
-        \`ordem\` int NOT NULL DEFAULT 0,
-        \`isActive\` boolean NOT NULL DEFAULT true,
-        \`userId\` int NOT NULL,
-        \`createdAt\` timestamp NOT NULL DEFAULT (now()),
-        \`updatedAt\` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
-        CONSTRAINT \`quesitos_id\` PRIMARY KEY(\`id\`)
-      )
-    `);
-
-    console.log('[Migration] Creating indexes for quesitos...');
-
-    // Create indexes
-    await connection.query('CREATE INDEX `user_idx` ON `quesitos` (`userId`)');
-    await connection.query('CREATE INDEX `ordem_idx` ON `quesitos` (`ordem`)');
-    await connection.query('CREATE INDEX `is_active_idx` ON `quesitos` (`isActive`)');
-
-    console.log('[Migration] ✓ Table "quesitos" created successfully');
 
     // Check if feedback_quesitos table exists
     const [fqTables] = await connection.query(
