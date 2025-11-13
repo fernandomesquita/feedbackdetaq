@@ -90,9 +90,9 @@ export default function Feedbacks() {
                 </Select>
               </div>
 
-              {feedbackRole === "TAQUIGRAFO" && (
+              {(feedbackRole === "TAQUIGRAFO" || feedbackRole === "DIRETOR" || feedbackRole === "MASTER") && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Status</label>
+                  <label className="text-sm font-medium">Status de Leitura</label>
                   <Select value={readFilter} onValueChange={(value: any) => setReadFilter(value)}>
                     <SelectTrigger>
                       <SelectValue />
@@ -135,11 +135,17 @@ export default function Feedbacks() {
                                 {feedback.sessionType} {feedback.sessionNum}
                               </Badge>
                             )}
-                            {feedbackRole === "TAQUIGRAFO" && (
+                            {(feedbackRole === "TAQUIGRAFO" || feedbackRole === "DIRETOR" || feedbackRole === "MASTER") && (
                               feedback.isRead ? (
-                                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                                <Badge variant="outline" className="flex items-center gap-1 bg-green-50 text-green-700 border-green-200">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  Lido
+                                </Badge>
                               ) : (
-                                <Circle className="h-4 w-4 text-muted-foreground" />
+                                <Badge variant="outline" className="flex items-center gap-1 bg-amber-50 text-amber-700 border-amber-200">
+                                  <Circle className="h-3 w-3" />
+                                  Não Lido
+                                </Badge>
                               )
                             )}
                           </div>
