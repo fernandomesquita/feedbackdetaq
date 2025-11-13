@@ -113,7 +113,9 @@ export async function getQuesitoStatsByRevisor(revisorId: number) {
     ORDER BY totalUsos DESC
   `);
 
-  return result;
+  // db.execute retorna [rows, fields], pegamos apenas as rows
+  const rows = Array.isArray(result) && result.length > 0 ? result[0] : result;
+  return rows;
 }
 
 /**
@@ -138,7 +140,9 @@ export async function getQuesitoStatsByTaquigrafo(taquigId: number) {
     ORDER BY totalRecebidos DESC
   `);
 
-  return result;
+  // db.execute retorna [rows, fields], pegamos apenas as rows
+  const rows = Array.isArray(result) && result.length > 0 ? result[0] : result;
+  return rows;
 }
 
 /**
@@ -164,5 +168,11 @@ export async function getGlobalQuesitoStats() {
     ORDER BY totalUsos DESC
   `);
 
-  return result;
+  console.log('[getGlobalQuesitoStats] Raw result:', result);
+
+  // db.execute retorna [rows, fields], pegamos apenas as rows
+  const rows = Array.isArray(result) && result.length > 0 ? result[0] : result;
+  console.log('[getGlobalQuesitoStats] Rows:', rows);
+
+  return rows;
 }
