@@ -155,10 +155,11 @@ export default function Estatisticas() {
   // Função para gerar PDF
   const handleDownloadPDF = async () => {
     try {
-      const jsPDFModule = await import('jspdf');
-      const jsPDF = jsPDFModule.default || jsPDFModule.jsPDF;
-      await import('jspdf-autotable');
+      // Importar jsPDF e autoTable juntos
+      const { default: jsPDF } = await import('jspdf');
+      const autoTable = (await import('jspdf-autotable')).default;
 
+      // Criar instância do documento
       const doc = new jsPDF() as any;
 
       // Título
@@ -182,7 +183,7 @@ export default function Estatisticas() {
       doc.text('Métricas Gerais', 14, yPos);
       yPos += 10;
 
-      doc.autoTable({
+      autoTable(doc, {
         startY: yPos,
         head: [['Métrica', 'Valor']],
         body: [
@@ -195,7 +196,7 @@ export default function Estatisticas() {
         headStyles: { fillColor: [139, 92, 246] },
       });
 
-      yPos = doc.lastAutoTable.finalY + 15;
+      yPos = (doc as any).lastAutoTable.finalY + 15;
 
       // Feedbacks por Tipo
       if (feedbackTypeData.length > 0) {
@@ -204,7 +205,7 @@ export default function Estatisticas() {
         doc.text('Feedbacks por Tipo', 14, yPos);
         yPos += 10;
 
-        doc.autoTable({
+        autoTable(doc, {
           startY: yPos,
           head: [['Tipo', 'Quantidade']],
           body: feedbackTypeData.map(item => [item.name, item.value]),
@@ -212,7 +213,7 @@ export default function Estatisticas() {
           headStyles: { fillColor: [139, 92, 246] },
         });
 
-        yPos = doc.lastAutoTable.finalY + 15;
+        yPos = (doc as any).lastAutoTable.finalY + 15;
       }
 
       // Quesitos Mais Usados
@@ -227,7 +228,7 @@ export default function Estatisticas() {
         doc.text('Quesitos Mais Usados', 14, yPos);
         yPos += 10;
 
-        doc.autoTable({
+        autoTable(doc, {
           startY: yPos,
           head: [['Quesito', 'Usos', 'Revisores', 'Taquígrafos']],
           body: quesitoData.map(item => [item.name, item.usos, item.revisores, item.taquigrafos]),
@@ -235,7 +236,7 @@ export default function Estatisticas() {
           headStyles: { fillColor: [139, 92, 246] },
         });
 
-        yPos = doc.lastAutoTable.finalY + 15;
+        yPos = (doc as any).lastAutoTable.finalY + 15;
       }
 
       // Reações
@@ -250,7 +251,7 @@ export default function Estatisticas() {
         doc.text('Reações aos Feedbacks', 14, yPos);
         yPos += 10;
 
-        doc.autoTable({
+        autoTable(doc, {
           startY: yPos,
           head: [['Tipo de Reação', 'Quantidade']],
           body: reactionData.map(item => [item.name, item.value]),
@@ -258,7 +259,7 @@ export default function Estatisticas() {
           headStyles: { fillColor: [139, 92, 246] },
         });
 
-        yPos = doc.lastAutoTable.finalY + 15;
+        yPos = (doc as any).lastAutoTable.finalY + 15;
       }
 
       // Top Taquígrafos
@@ -273,7 +274,7 @@ export default function Estatisticas() {
         doc.text('Top Taquígrafos', 14, yPos);
         yPos += 10;
 
-        doc.autoTable({
+        autoTable(doc, {
           startY: yPos,
           head: [['Taquígrafo', 'Feedbacks Recebidos', 'Avaliação Média']],
           body: topTaquigrafos.map((item: any) => [
@@ -285,7 +286,7 @@ export default function Estatisticas() {
           headStyles: { fillColor: [139, 92, 246] },
         });
 
-        yPos = doc.lastAutoTable.finalY + 15;
+        yPos = (doc as any).lastAutoTable.finalY + 15;
       }
 
       // Top Revisores
@@ -300,7 +301,7 @@ export default function Estatisticas() {
         doc.text('Top Revisores', 14, yPos);
         yPos += 10;
 
-        doc.autoTable({
+        autoTable(doc, {
           startY: yPos,
           head: [['Revisor', 'Feedbacks Enviados']],
           body: topRevisores.map((item: any) => [item.name, item.feedbackCount]),
