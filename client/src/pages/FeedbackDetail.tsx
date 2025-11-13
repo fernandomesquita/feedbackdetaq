@@ -171,13 +171,50 @@ export default function FeedbackDetail() {
           </CardHeader>
 
           <CardContent className="space-y-6">
-            {/* Content */}
-            <div>
-              <h3 className="font-semibold mb-2">Conteúdo do Feedback</h3>
-              <div className="prose prose-sm max-w-none">
-                <p className="whitespace-pre-wrap">{feedback.content}</p>
+            {/* Quesitos */}
+            {feedbackData.quesitos && feedbackData.quesitos.length > 0 ? (
+              <div className="space-y-4">
+                <h3 className="font-semibold text-lg">Quesitos Avaliados</h3>
+                {feedbackData.quesitos.map((item: any, index: number) => (
+                  <div key={item.id} className="border rounded-lg p-4 space-y-3 bg-muted/30">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="font-semibold">
+                        {index + 1}. {item.quesito?.titulo || "Quesito"}
+                      </Badge>
+                    </div>
+                    {item.quesito?.descricao && (
+                      <p className="text-sm text-muted-foreground italic">
+                        {item.quesito.descricao}
+                      </p>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                      <div>
+                        <p className="text-sm font-medium mb-2 text-muted-foreground">Texto Original:</p>
+                        <div className="bg-background p-3 rounded border">
+                          <p className="whitespace-pre-wrap text-sm">{item.textoOriginal}</p>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium mb-2 text-muted-foreground">Texto Revisado:</p>
+                        <div className="bg-background p-3 rounded border border-primary/30">
+                          <p className="whitespace-pre-wrap text-sm">{item.textoRevisado}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : (
+              /* Fallback: Content antigo para feedbacks sem quesitos */
+              feedback.content && (
+                <div>
+                  <h3 className="font-semibold mb-2">Conteúdo do Feedback</h3>
+                  <div className="prose prose-sm max-w-none">
+                    <p className="whitespace-pre-wrap">{feedback.content}</p>
+                  </div>
+                </div>
+              )
+            )}
 
             {/* Image */}
             {feedback.imageUrl && (

@@ -251,6 +251,27 @@ export type Quesito = typeof quesitos.$inferSelect;
 export type InsertQuesito = typeof quesitos.$inferInsert;
 
 /**
+ * TABELA DE ITENS DE FEEDBACK (relação feedback-quesito)
+ */
+export const feedbackQuesitos = mysqlTable("feedback_quesitos", {
+  id: int("id").autoincrement().primaryKey(),
+  feedbackId: int("feedbackId").notNull(),
+  quesitoId: int("quesitoId").notNull(),
+  textoOriginal: text("textoOriginal").notNull(),
+  textoRevisado: text("textoRevisado").notNull(),
+  ordem: int("ordem").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  feedbackIdx: index("feedback_idx").on(table.feedbackId),
+  quesitoIdx: index("quesito_idx").on(table.quesitoId),
+  ordemIdx: index("ordem_idx").on(table.ordem),
+}));
+
+export type FeedbackQuesito = typeof feedbackQuesitos.$inferSelect;
+export type InsertFeedbackQuesito = typeof feedbackQuesitos.$inferInsert;
+
+/**
  * TABELA DE LOGS DE AUDITORIA
  */
 export const auditLogs = mysqlTable("audit_logs", {
@@ -312,6 +333,7 @@ export const feedbacksRelations = relations(feedbacks, ({ one, many }) => ({
   }),
   comments: many(comments),
   reactions: many(reactions),
+  quesitos: many(feedbackQuesitos),
 }));
 
 export const commentsRelations = relations(comments, ({ one }) => ({
@@ -393,10 +415,22 @@ export const templatesRelations = relations(templates, ({ one }) => ({
   }),
 }));
 
-export const quesitosRelations = relations(quesitos, ({ one }) => ({
+export const quesitosRelations = relations(quesitos, ({ one, many }) => ({
   creator: one(users, {
     fields: [quesitos.userId],
     references: [users.id],
+  }),
+  feedbackQuesitos: many(feedbackQuesitos),
+}));
+
+export const feedbackQuesitosRelations = relations(feedbackQuesitos, ({ one }) => ({
+  feedback: one(feedbacks, {
+    fields: [feedbackQuesitos.feedbackId],
+    references: [feedbacks.id],
+  }),
+  quesito: one(quesitos, {
+    fields: [feedbackQuesitos.quesitoId],
+    references: [quesitos.id],
   }),
 }));
 

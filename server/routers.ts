@@ -84,20 +84,46 @@ export const appRouter = router({
       .input(z.object({
         type: z.enum(feedbackTypeEnum),
         title: z.string().optional(),
-        content: z.string().min(1),
+        content: z.string().optional(),
         imageUrl: z.string().optional(),
         rating: z.number().min(0).max(5).optional(),
         sessionType: z.enum(sessionTypeEnum).optional(),
         sessionNum: z.string().optional(),
         categories: z.array(z.string()).optional(),
         taquigId: z.number(),
+        quesitos: z.array(z.object({
+          quesitoId: z.number(),
+          textoOriginal: z.string().min(1),
+          textoRevisado: z.string().min(1),
+          ordem: z.number(),
+        })).optional(),
       }))
       .mutation(async ({ ctx, input }) => {
         const { createFeedback } = await import("./db-feedbacks");
+        const { createFeedbackQuesitos } = await import("./db-feedback-quesitos");
+
+        const { quesitos, ...feedbackData } = input;
+
+        // Criar feedback
         const result = await createFeedback({
-          ...input,
+          ...feedbackData,
+          content: feedbackData.content || "", // Default vazio se não vier
           revisorId: ctx.user.id,
         });
+
+        // Criar quesitos se fornecidos
+        if (quesitos && quesitos.length > 0) {
+          await createFeedbackQuesitos(
+            quesitos.map(q => ({
+              feedbackId: result.insertId,
+              quesitoId: q.quesitoId,
+              textoOriginal: q.textoOriginal,
+              textoRevisado: q.textoRevisado,
+              ordem: q.ordem,
+            }))
+          );
+        }
+
         return result;
       }),
 
@@ -126,7 +152,17 @@ export const appRouter = router({
       .input(z.object({ id: z.number() }))
       .query(async ({ input }) => {
         const { getFeedbackById } = await import("./db-feedbacks");
-        return getFeedbackById(input.id);
+        const { getFeedbackQuesitos } = await import("./db-feedback-quesitos");
+
+        const feedback = await getFeedbackById(input.id);
+        if (!feedback) return undefined;
+
+        const quesitos = await getFeedbackQuesitos(input.id);
+
+        return {
+          ...feedback,
+          quesitos,
+        };
       }),
 
     markAsRead: protectedProcedure
