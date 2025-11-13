@@ -154,178 +154,183 @@ export default function Estatisticas() {
 
   // Função para gerar PDF
   const handleDownloadPDF = async () => {
-    const { jsPDF } = await import('jspdf');
-    await import('jspdf-autotable');
+    try {
+      const { jsPDF } = await import('jspdf');
+      await import('jspdf-autotable');
 
-    const doc = new jsPDF() as any;
+      const doc = new jsPDF() as any;
 
-    // Título
-    doc.setFontSize(20);
-    doc.setFont(undefined, 'bold');
-    doc.text('Relatório de Estatísticas - Sistema de Feedback', 105, 20, { align: 'center' });
-
-    // Período
-    doc.setFontSize(12);
-    doc.setFont(undefined, 'normal');
-    const periodText = selectedMonth === "ALL"
-      ? `Período: Ano ${selectedYear}`
-      : `Período: ${months.find(m => m.value === selectedMonth)?.label} de ${selectedYear}`;
-    doc.text(periodText, 105, 30, { align: 'center' });
-
-    let yPos = 45;
-
-    // Métricas Gerais
-    doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
-    doc.text('Métricas Gerais', 14, yPos);
-    yPos += 10;
-
-    doc.autoTable({
-      startY: yPos,
-      head: [['Métrica', 'Valor']],
-      body: [
-        ['Total de Feedbacks', generalStats?.totalFeedbacks || 0],
-        ['Comentários', generalStats?.totalComments || 0],
-        ['Reações', generalStats?.totalReactions || 0],
-        ['Avaliação Média', averageRating ? averageRating.toFixed(1) : '-'],
-      ],
-      theme: 'striped',
-      headStyles: { fillColor: [139, 92, 246] },
-    });
-
-    yPos = doc.lastAutoTable.finalY + 15;
-
-    // Feedbacks por Tipo
-    if (feedbackTypeData.length > 0) {
-      doc.setFontSize(14);
+      // Título
+      doc.setFontSize(20);
       doc.setFont(undefined, 'bold');
-      doc.text('Feedbacks por Tipo', 14, yPos);
-      yPos += 10;
+      doc.text('Relatório de Estatísticas - Sistema de Feedback', 105, 20, { align: 'center' });
 
-      doc.autoTable({
-        startY: yPos,
-        head: [['Tipo', 'Quantidade']],
-        body: feedbackTypeData.map(item => [item.name, item.value]),
-        theme: 'striped',
-        headStyles: { fillColor: [139, 92, 246] },
-      });
-
-      yPos = doc.lastAutoTable.finalY + 15;
-    }
-
-    // Quesitos Mais Usados
-    if (quesitoData.length > 0 && canViewAll) {
-      if (yPos > 250) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
-      doc.text('Quesitos Mais Usados', 14, yPos);
-      yPos += 10;
-
-      doc.autoTable({
-        startY: yPos,
-        head: [['Quesito', 'Usos', 'Revisores', 'Taquígrafos']],
-        body: quesitoData.map(item => [item.name, item.usos, item.revisores, item.taquigrafos]),
-        theme: 'striped',
-        headStyles: { fillColor: [139, 92, 246] },
-      });
-
-      yPos = doc.lastAutoTable.finalY + 15;
-    }
-
-    // Reações
-    if (reactionData.length > 0) {
-      if (yPos > 250) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
-      doc.text('Reações aos Feedbacks', 14, yPos);
-      yPos += 10;
-
-      doc.autoTable({
-        startY: yPos,
-        head: [['Tipo de Reação', 'Quantidade']],
-        body: reactionData.map(item => [item.name, item.value]),
-        theme: 'striped',
-        headStyles: { fillColor: [139, 92, 246] },
-      });
-
-      yPos = doc.lastAutoTable.finalY + 15;
-    }
-
-    // Top Taquígrafos
-    if (topTaquigrafos && topTaquigrafos.length > 0 && canViewAll) {
-      if (yPos > 250) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
-      doc.text('Top Taquígrafos', 14, yPos);
-      yPos += 10;
-
-      doc.autoTable({
-        startY: yPos,
-        head: [['Taquígrafo', 'Feedbacks Recebidos', 'Avaliação Média']],
-        body: topTaquigrafos.map((item: any) => [
-          item.name,
-          item.feedbackCount,
-          item.avgRating ? item.avgRating.toFixed(1) : '-',
-        ]),
-        theme: 'striped',
-        headStyles: { fillColor: [139, 92, 246] },
-      });
-
-      yPos = doc.lastAutoTable.finalY + 15;
-    }
-
-    // Top Revisores
-    if (topRevisores && topRevisores.length > 0 && canViewAll) {
-      if (yPos > 250) {
-        doc.addPage();
-        yPos = 20;
-      }
-
-      doc.setFontSize(14);
-      doc.setFont(undefined, 'bold');
-      doc.text('Top Revisores', 14, yPos);
-      yPos += 10;
-
-      doc.autoTable({
-        startY: yPos,
-        head: [['Revisor', 'Feedbacks Enviados']],
-        body: topRevisores.map((item: any) => [item.name, item.feedbackCount]),
-        theme: 'striped',
-        headStyles: { fillColor: [139, 92, 246] },
-      });
-    }
-
-    // Rodapé
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
-      doc.setPage(i);
-      doc.setFontSize(10);
+      // Período
+      doc.setFontSize(12);
       doc.setFont(undefined, 'normal');
-      doc.text(
-        `Gerado em ${new Date().toLocaleDateString('pt-BR')} - Página ${i} de ${pageCount}`,
-        105,
-        290,
-        { align: 'center' }
-      );
-    }
+      const periodText = selectedMonth === "ALL"
+        ? `Período: Ano ${selectedYear}`
+        : `Período: ${months.find(m => m.value === selectedMonth)?.label} de ${selectedYear}`;
+      doc.text(periodText, 105, 30, { align: 'center' });
 
-    // Salvar PDF
-    const fileName = selectedMonth === "ALL"
-      ? `estatisticas_${selectedYear}.pdf`
-      : `estatisticas_${selectedYear}_${String(selectedMonth).padStart(2, '0')}.pdf`;
-    doc.save(fileName);
+      let yPos = 45;
+
+      // Métricas Gerais
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('Métricas Gerais', 14, yPos);
+      yPos += 10;
+
+      doc.autoTable({
+        startY: yPos,
+        head: [['Métrica', 'Valor']],
+        body: [
+          ['Total de Feedbacks', generalStats?.totalFeedbacks || 0],
+          ['Comentários', generalStats?.totalComments || 0],
+          ['Reações', generalStats?.totalReactions || 0],
+          ['Avaliação Média', averageRating ? Number(averageRating).toFixed(1) : '-'],
+        ],
+        theme: 'striped',
+        headStyles: { fillColor: [139, 92, 246] },
+      });
+
+      yPos = doc.lastAutoTable.finalY + 15;
+
+      // Feedbacks por Tipo
+      if (feedbackTypeData.length > 0) {
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('Feedbacks por Tipo', 14, yPos);
+        yPos += 10;
+
+        doc.autoTable({
+          startY: yPos,
+          head: [['Tipo', 'Quantidade']],
+          body: feedbackTypeData.map(item => [item.name, item.value]),
+          theme: 'striped',
+          headStyles: { fillColor: [139, 92, 246] },
+        });
+
+        yPos = doc.lastAutoTable.finalY + 15;
+      }
+
+      // Quesitos Mais Usados
+      if (quesitoData.length > 0 && canViewAll) {
+        if (yPos > 250) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('Quesitos Mais Usados', 14, yPos);
+        yPos += 10;
+
+        doc.autoTable({
+          startY: yPos,
+          head: [['Quesito', 'Usos', 'Revisores', 'Taquígrafos']],
+          body: quesitoData.map(item => [item.name, item.usos, item.revisores, item.taquigrafos]),
+          theme: 'striped',
+          headStyles: { fillColor: [139, 92, 246] },
+        });
+
+        yPos = doc.lastAutoTable.finalY + 15;
+      }
+
+      // Reações
+      if (reactionData.length > 0) {
+        if (yPos > 250) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('Reações aos Feedbacks', 14, yPos);
+        yPos += 10;
+
+        doc.autoTable({
+          startY: yPos,
+          head: [['Tipo de Reação', 'Quantidade']],
+          body: reactionData.map(item => [item.name, item.value]),
+          theme: 'striped',
+          headStyles: { fillColor: [139, 92, 246] },
+        });
+
+        yPos = doc.lastAutoTable.finalY + 15;
+      }
+
+      // Top Taquígrafos
+      if (topTaquigrafos && topTaquigrafos.length > 0 && canViewAll) {
+        if (yPos > 250) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('Top Taquígrafos', 14, yPos);
+        yPos += 10;
+
+        doc.autoTable({
+          startY: yPos,
+          head: [['Taquígrafo', 'Feedbacks Recebidos', 'Avaliação Média']],
+          body: topTaquigrafos.map((item: any) => [
+            item.name,
+            item.feedbackCount,
+            item.avgRating ? item.avgRating.toFixed(1) : '-',
+          ]),
+          theme: 'striped',
+          headStyles: { fillColor: [139, 92, 246] },
+        });
+
+        yPos = doc.lastAutoTable.finalY + 15;
+      }
+
+      // Top Revisores
+      if (topRevisores && topRevisores.length > 0 && canViewAll) {
+        if (yPos > 250) {
+          doc.addPage();
+          yPos = 20;
+        }
+
+        doc.setFontSize(14);
+        doc.setFont(undefined, 'bold');
+        doc.text('Top Revisores', 14, yPos);
+        yPos += 10;
+
+        doc.autoTable({
+          startY: yPos,
+          head: [['Revisor', 'Feedbacks Enviados']],
+          body: topRevisores.map((item: any) => [item.name, item.feedbackCount]),
+          theme: 'striped',
+          headStyles: { fillColor: [139, 92, 246] },
+        });
+      }
+
+      // Rodapé
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setFont(undefined, 'normal');
+        doc.text(
+          `Gerado em ${new Date().toLocaleDateString('pt-BR')} - Página ${i} de ${pageCount}`,
+          105,
+          290,
+          { align: 'center' }
+        );
+      }
+
+      // Salvar PDF
+      const fileName = selectedMonth === "ALL"
+        ? `estatisticas_${selectedYear}.pdf`
+        : `estatisticas_${selectedYear}_${String(selectedMonth).padStart(2, '0')}.pdf`;
+      doc.save(fileName);
+    } catch (error) {
+      console.error('Erro ao gerar PDF:', error);
+      alert('Erro ao gerar o PDF. Por favor, tente novamente.');
+    }
   };
 
   return (
