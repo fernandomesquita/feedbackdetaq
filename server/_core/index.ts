@@ -8,15 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { uploadRouter } from "../upload";
-import { migrate } from "drizzle-orm/mysql2/migrator";
-import { drizzle } from "drizzle-orm/mysql2";
-import { readdir } from "fs/promises";
-import { join } from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import mysql from "mysql2/promise";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -43,21 +35,53 @@ async function runMigrations() {
     return;
   }
 
+  let connection;
   try {
-    console.log('[Migration] Running database migrations...');
-    const db = drizzle(process.env.DATABASE_URL);
+    console.log('[Migration] Connecting to database...');
+    connection = await mysql.createConnection(process.env.DATABASE_URL);
 
-    // Get migrations folder path
-    const migrationsFolder = join(__dirname, '../../drizzle');
+    // Check if quesitos table exists
+    const [tables] = await connection.query(
+      "SHOW TABLES LIKE 'quesitos'"
+    );
 
-    // Run migrations
-    await migrate(db, { migrationsFolder });
+    if ((tables as any[]).length > 0) {
+      console.log('[Migration] Table "quesitos" already exists, skipping migration');
+      return;
+    }
 
-    console.log('[Migration] ✓ Database migrations completed successfully');
+    console.log('[Migration] Creating table "quesitos"...');
+
+    // Create quesitos table
+    await connection.query(`
+      CREATE TABLE \`quesitos\` (
+        \`id\` int AUTO_INCREMENT NOT NULL,
+        \`titulo\` varchar(255) NOT NULL,
+        \`descricao\` text,
+        \`ordem\` int NOT NULL DEFAULT 0,
+        \`isActive\` boolean NOT NULL DEFAULT true,
+        \`userId\` int NOT NULL,
+        \`createdAt\` timestamp NOT NULL DEFAULT (now()),
+        \`updatedAt\` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+        CONSTRAINT \`quesitos_id\` PRIMARY KEY(\`id\`)
+      )
+    `);
+
+    console.log('[Migration] Creating indexes...');
+
+    // Create indexes
+    await connection.query('CREATE INDEX `user_idx` ON `quesitos` (`userId`)');
+    await connection.query('CREATE INDEX `ordem_idx` ON `quesitos` (`ordem`)');
+    await connection.query('CREATE INDEX `is_active_idx` ON `quesitos` (`isActive`)');
+
+    console.log('[Migration] ✓ Table "quesitos" created successfully');
   } catch (error: any) {
     console.error('[Migration] Failed to run migrations:', error.message);
     // Don't exit - allow server to start even if migrations fail
-    // This prevents deployment failures if migrations have already been applied
+  } finally {
+    if (connection) {
+      await connection.end();
+    }
   }
 }
 
