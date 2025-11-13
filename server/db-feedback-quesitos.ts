@@ -148,11 +148,14 @@ export async function getQuesitoStatsByTaquigrafo(taquigId: number) {
 /**
  * Estatísticas globais de quesitos mais usados
  */
-export async function getGlobalQuesitoStats() {
+export async function getGlobalQuesitoStats(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
   const db = await getDb();
   if (!db) return [];
 
-  const result = await db.execute(sql`
+  let query = sql`
     SELECT
       q.id as quesitoId,
       q.titulo as quesitoTitulo,
@@ -164,9 +167,22 @@ export async function getGlobalQuesitoStats() {
     INNER JOIN quesitos q ON fq.quesitoId = q.id
     INNER JOIN feedbacks f ON fq.feedbackId = f.id
     WHERE q.isActive = true
+  `;
+
+  // Adicionar filtros de data se fornecidos
+  if (filters?.startDate) {
+    query = sql`${query} AND f.createdAt >= ${filters.startDate}`;
+  }
+  if (filters?.endDate) {
+    query = sql`${query} AND f.createdAt <= ${filters.endDate}`;
+  }
+
+  query = sql`${query}
     GROUP BY q.id, q.titulo, q.descricao
     ORDER BY totalUsos DESC
-  `);
+  `;
+
+  const result = await db.execute(query);
 
   console.log('[getGlobalQuesitoStats] Raw result:', result);
 

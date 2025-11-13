@@ -1,8 +1,11 @@
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuthWithProfile } from "@/hooks/useAuthWithProfile";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart3, TrendingUp, Users, MessageSquare, Bell, Book, ThumbsUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { BarChart3, TrendingUp, Users, MessageSquare, Bell, Book, ThumbsUp, Download } from "lucide-react";
 import { trpc } from "@/lib/trpc";
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -30,13 +33,78 @@ const COLORS = {
 export default function Estatisticas() {
   const { feedbackRole, user } = useAuthWithProfile();
 
-  const { data: generalStats, isLoading: loadingGeneral } = trpc.statistics.general.useQuery();
-  const { data: feedbackStats, isLoading: loadingFeedbacks } = trpc.statistics.feedbacks.useQuery();
-  const { data: reactionStats } = trpc.statistics.reactions.useQuery();
-  const { data: averageRating } = trpc.statistics.averageRating.useQuery();
-  const { data: topTaquigrafos } = trpc.statistics.topTaquigrafos.useQuery({ limit: 10 });
-  const { data: topRevisores } = trpc.statistics.topRevisores.useQuery({ limit: 10 });
-  const { data: quesitoStats } = trpc.statistics.quesitosGlobal.useQuery();
+  // Estados para filtros
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1;
+
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
+  const [selectedMonth, setSelectedMonth] = useState<number | "ALL">("ALL");
+
+  // Gerar array de anos (últimos 5 anos)
+  const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+  const months = [
+    { value: "ALL", label: "Todos os meses" },
+    { value: 1, label: "Janeiro" },
+    { value: 2, label: "Fevereiro" },
+    { value: 3, label: "Março" },
+    { value: 4, label: "Abril" },
+    { value: 5, label: "Maio" },
+    { value: 6, label: "Junho" },
+    { value: 7, label: "Julho" },
+    { value: 8, label: "Agosto" },
+    { value: 9, label: "Setembro" },
+    { value: 10, label: "Outubro" },
+    { value: 11, label: "Novembro" },
+    { value: 12, label: "Dezembro" },
+  ];
+
+  // Calcular datas de início e fim baseadas nos filtros
+  const getDateRange = () => {
+    if (selectedMonth === "ALL") {
+      return {
+        startDate: new Date(selectedYear, 0, 1),
+        endDate: new Date(selectedYear, 11, 31, 23, 59, 59),
+      };
+    } else {
+      return {
+        startDate: new Date(selectedYear, selectedMonth - 1, 1),
+        endDate: new Date(selectedYear, selectedMonth, 0, 23, 59, 59),
+      };
+    }
+  };
+
+  const dateRange = getDateRange();
+
+  const { data: generalStats, isLoading: loadingGeneral } = trpc.statistics.general.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const { data: feedbackStats, isLoading: loadingFeedbacks } = trpc.statistics.feedbacks.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const { data: reactionStats } = trpc.statistics.reactions.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const { data: averageRating } = trpc.statistics.averageRating.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const { data: topTaquigrafos } = trpc.statistics.topTaquigrafos.useQuery({
+    limit: 10,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const { data: topRevisores } = trpc.statistics.topRevisores.useQuery({
+    limit: 10,
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
+  const { data: quesitoStats } = trpc.statistics.quesitosGlobal.useQuery({
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+  });
 
   const canViewAll = feedbackRole === "MASTER" || feedbackRole === "DIRETOR";
 
@@ -84,18 +152,250 @@ export default function Estatisticas() {
   console.log('quesitoStats raw:', quesitoStats);
   console.log('quesitoData transformed:', quesitoData);
 
+  // Função para gerar PDF
+  const handleDownloadPDF = async () => {
+    const { jsPDF } = await import('jspdf');
+    await import('jspdf-autotable');
+
+    const doc = new jsPDF() as any;
+
+    // Título
+    doc.setFontSize(20);
+    doc.setFont(undefined, 'bold');
+    doc.text('Relatório de Estatísticas - Sistema de Feedback', 105, 20, { align: 'center' });
+
+    // Período
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'normal');
+    const periodText = selectedMonth === "ALL"
+      ? `Período: Ano ${selectedYear}`
+      : `Período: ${months.find(m => m.value === selectedMonth)?.label} de ${selectedYear}`;
+    doc.text(periodText, 105, 30, { align: 'center' });
+
+    let yPos = 45;
+
+    // Métricas Gerais
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text('Métricas Gerais', 14, yPos);
+    yPos += 10;
+
+    doc.autoTable({
+      startY: yPos,
+      head: [['Métrica', 'Valor']],
+      body: [
+        ['Total de Feedbacks', generalStats?.totalFeedbacks || 0],
+        ['Comentários', generalStats?.totalComments || 0],
+        ['Reações', generalStats?.totalReactions || 0],
+        ['Avaliação Média', averageRating ? averageRating.toFixed(1) : '-'],
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [139, 92, 246] },
+    });
+
+    yPos = doc.lastAutoTable.finalY + 15;
+
+    // Feedbacks por Tipo
+    if (feedbackTypeData.length > 0) {
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('Feedbacks por Tipo', 14, yPos);
+      yPos += 10;
+
+      doc.autoTable({
+        startY: yPos,
+        head: [['Tipo', 'Quantidade']],
+        body: feedbackTypeData.map(item => [item.name, item.value]),
+        theme: 'striped',
+        headStyles: { fillColor: [139, 92, 246] },
+      });
+
+      yPos = doc.lastAutoTable.finalY + 15;
+    }
+
+    // Quesitos Mais Usados
+    if (quesitoData.length > 0 && canViewAll) {
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('Quesitos Mais Usados', 14, yPos);
+      yPos += 10;
+
+      doc.autoTable({
+        startY: yPos,
+        head: [['Quesito', 'Usos', 'Revisores', 'Taquígrafos']],
+        body: quesitoData.map(item => [item.name, item.usos, item.revisores, item.taquigrafos]),
+        theme: 'striped',
+        headStyles: { fillColor: [139, 92, 246] },
+      });
+
+      yPos = doc.lastAutoTable.finalY + 15;
+    }
+
+    // Reações
+    if (reactionData.length > 0) {
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('Reações aos Feedbacks', 14, yPos);
+      yPos += 10;
+
+      doc.autoTable({
+        startY: yPos,
+        head: [['Tipo de Reação', 'Quantidade']],
+        body: reactionData.map(item => [item.name, item.value]),
+        theme: 'striped',
+        headStyles: { fillColor: [139, 92, 246] },
+      });
+
+      yPos = doc.lastAutoTable.finalY + 15;
+    }
+
+    // Top Taquígrafos
+    if (topTaquigrafos && topTaquigrafos.length > 0 && canViewAll) {
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('Top Taquígrafos', 14, yPos);
+      yPos += 10;
+
+      doc.autoTable({
+        startY: yPos,
+        head: [['Taquígrafo', 'Feedbacks Recebidos', 'Avaliação Média']],
+        body: topTaquigrafos.map((item: any) => [
+          item.name,
+          item.feedbackCount,
+          item.avgRating ? item.avgRating.toFixed(1) : '-',
+        ]),
+        theme: 'striped',
+        headStyles: { fillColor: [139, 92, 246] },
+      });
+
+      yPos = doc.lastAutoTable.finalY + 15;
+    }
+
+    // Top Revisores
+    if (topRevisores && topRevisores.length > 0 && canViewAll) {
+      if (yPos > 250) {
+        doc.addPage();
+        yPos = 20;
+      }
+
+      doc.setFontSize(14);
+      doc.setFont(undefined, 'bold');
+      doc.text('Top Revisores', 14, yPos);
+      yPos += 10;
+
+      doc.autoTable({
+        startY: yPos,
+        head: [['Revisor', 'Feedbacks Enviados']],
+        body: topRevisores.map((item: any) => [item.name, item.feedbackCount]),
+        theme: 'striped',
+        headStyles: { fillColor: [139, 92, 246] },
+      });
+    }
+
+    // Rodapé
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.setFont(undefined, 'normal');
+      doc.text(
+        `Gerado em ${new Date().toLocaleDateString('pt-BR')} - Página ${i} de ${pageCount}`,
+        105,
+        290,
+        { align: 'center' }
+      );
+    }
+
+    // Salvar PDF
+    const fileName = selectedMonth === "ALL"
+      ? `estatisticas_${selectedYear}.pdf`
+      : `estatisticas_${selectedYear}_${String(selectedMonth).padStart(2, '0')}.pdf`;
+    doc.save(fileName);
+  };
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
+        {/* Header com Filtros */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-            <BarChart3 className="h-8 w-8" />
-            Estatísticas
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Visualize métricas e indicadores do sistema
-          </p>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+                <BarChart3 className="h-8 w-8" />
+                Estatísticas
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Visualize métricas e indicadores do sistema
+              </p>
+            </div>
+            <Button onClick={handleDownloadPDF} className="flex items-center gap-2">
+              <Download className="h-4 w-4" />
+              Baixar PDF
+            </Button>
+          </div>
+
+          {/* Filtros */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Filtros de Período</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Ano</label>
+                  <Select
+                    value={String(selectedYear)}
+                    onValueChange={(value) => setSelectedYear(Number(value))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {years.map((year) => (
+                        <SelectItem key={year} value={String(year)}>
+                          {year}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Mês</label>
+                  <Select
+                    value={String(selectedMonth)}
+                    onValueChange={(value) => setSelectedMonth(value === "ALL" ? "ALL" : Number(value))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {months.map((month) => (
+                        <SelectItem key={month.value} value={String(month.value)}>
+                          {month.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Cards de Métricas Gerais */}

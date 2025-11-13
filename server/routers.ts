@@ -520,61 +520,97 @@ export const appRouter = router({
 
   statistics: router({
     general: protectedProcedure
-      .query(async () => {
-        const stats = await dbStatistics.getGeneralStats();
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getGeneralStats(input);
         return stats;
       }),
 
     feedbacks: protectedProcedure
-      .query(async () => {
-        const stats = await dbStatistics.getFeedbackStats();
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getFeedbackStats(input);
         return stats;
       }),
 
     byTaquigrafo: protectedProcedure
-      .input(z.object({ taquigId: z.number() }))
+      .input(z.object({
+        taquigId: z.number(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
       .query(async ({ input }) => {
-        const stats = await dbStatistics.getStatsByTaquigrafo(input.taquigId);
+        const stats = await dbStatistics.getStatsByTaquigrafo(input.taquigId, input);
         return stats;
       }),
 
     byRevisor: protectedProcedure
-      .input(z.object({ revisorId: z.number() }))
+      .input(z.object({
+        revisorId: z.number(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }))
       .query(async ({ input }) => {
-        const stats = await dbStatistics.getStatsByRevisor(input.revisorId);
+        const stats = await dbStatistics.getStatsByRevisor(input.revisorId, input);
         return stats;
       }),
 
     topTaquigrafos: protectedProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({
+        limit: z.number().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional())
       .query(async ({ input }) => {
-        const stats = await dbStatistics.getTopTaquigrafos(input.limit);
+        const stats = await dbStatistics.getTopTaquigrafos(input?.limit, input);
         return stats;
       }),
 
     topRevisores: protectedProcedure
-      .input(z.object({ limit: z.number().optional() }))
+      .input(z.object({
+        limit: z.number().optional(),
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional())
       .query(async ({ input }) => {
-        const stats = await dbStatistics.getTopRevisores(input.limit);
+        const stats = await dbStatistics.getTopRevisores(input?.limit, input);
         return stats;
       }),
 
     reactions: protectedProcedure
-      .query(async () => {
-        const stats = await dbStatistics.getReactionStats();
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getReactionStats(input);
         return stats;
       }),
 
     averageRating: protectedProcedure
-      .query(async () => {
-        const stats = await dbStatistics.getAverageRating();
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        const stats = await dbStatistics.getAverageRating(input);
         return stats;
       }),
 
     quesitosGlobal: protectedProcedure
-      .query(async () => {
+      .input(z.object({
+        startDate: z.date().optional(),
+        endDate: z.date().optional(),
+      }).optional())
+      .query(async ({ input }) => {
         const { getGlobalQuesitoStats } = await import("./db-feedback-quesitos");
-        const stats = await getGlobalQuesitoStats();
+        const stats = await getGlobalQuesitoStats(input);
         return stats;
       }),
   }),
