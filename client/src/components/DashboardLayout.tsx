@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users, MessageSquare, Bell, BookOpen, BarChart3 } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, Users, MessageSquare, Bell, BookOpen, BarChart3, ClipboardList } from "lucide-react";
 import { trpc } from "@/lib/trpc";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
@@ -33,6 +33,7 @@ const menuItems = [
   { icon: MessageSquare, label: "Feedbacks", path: "/feedbacks", roles: [] },
   { icon: Bell, label: "Avisos", path: "/avisos", roles: [] },
   { icon: BookOpen, label: "Padronização", path: "/padronizacao", roles: [] },
+  { icon: ClipboardList, label: "Quesitos", path: "/quesitos", roles: ["MASTER", "DIRETOR"] },
   { icon: BarChart3, label: "Estatísticas", path: "/estatisticas", roles: ["MASTER", "DIRETOR"] },
   { icon: Users, label: "Usuários", path: "/usuarios", roles: ["MASTER"] },
 ];

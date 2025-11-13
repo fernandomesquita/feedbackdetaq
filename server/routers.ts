@@ -11,6 +11,7 @@ import * as dbComments from "./db-comments";
 import * as dbAvisos from "./db-avisos";
 import * as dbPadronizacao from "./db-padronizacao";
 import * as dbStatistics from "./db-statistics";
+import * as dbQuesitos from "./db-quesitos";
 
 export const appRouter = router({
   system: systemRouter,
@@ -517,6 +518,104 @@ export const appRouter = router({
       }),
   }),
 
+  quesitos: router({
+    list: protectedProcedure
+      .input(z.object({
+        isActive: z.boolean().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        const quesitos = await dbQuesitos.getQuesitos(input);
+        return quesitos;
+      }),
+
+    count: protectedProcedure
+      .input(z.object({
+        isActive: z.boolean().optional(),
+      }).optional())
+      .query(async ({ input }) => {
+        const count = await dbQuesitos.countQuesitos(input);
+        return count;
+      }),
+
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        const quesito = await dbQuesitos.getQuesitoById(input.id);
+        return quesito;
+      }),
+
+    create: protectedProcedure
+      .input(z.object({
+        titulo: z.string().min(1),
+        descricao: z.string().optional(),
+        ordem: z.number().optional(),
+        isActive: z.boolean().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Verificar se usuário é MASTER ou DIRETOR
+        const profile = await db.getUserProfile(ctx.user.id);
+        if (!profile || !["MASTER", "DIRETOR"].includes(profile.feedbackRole)) {
+          throw new Error("Apenas Master ou Diretor podem criar quesitos");
+        }
+
+        const quesito = await dbQuesitos.createQuesito({
+          ...input,
+          userId: ctx.user.id,
+        });
+        return quesito;
+      }),
+
+    update: protectedProcedure
+      .input(z.object({
+        id: z.number(),
+        titulo: z.string().optional(),
+        descricao: z.string().optional(),
+        ordem: z.number().optional(),
+        isActive: z.boolean().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Verificar se usuário é MASTER ou DIRETOR
+        const profile = await db.getUserProfile(ctx.user.id);
+        if (!profile || !["MASTER", "DIRETOR"].includes(profile.feedbackRole)) {
+          throw new Error("Apenas Master ou Diretor podem atualizar quesitos");
+        }
+
+        const { id, ...data } = input;
+        const quesito = await dbQuesitos.updateQuesito(id, data);
+        return quesito;
+      }),
+
+    delete: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .mutation(async ({ input, ctx }) => {
+        // Verificar se usuário é MASTER ou DIRETOR
+        const profile = await db.getUserProfile(ctx.user.id);
+        if (!profile || !["MASTER", "DIRETOR"].includes(profile.feedbackRole)) {
+          throw new Error("Apenas Master ou Diretor podem deletar quesitos");
+        }
+
+        await dbQuesitos.deleteQuesito(input.id);
+        return { success: true };
+      }),
+
+    reorder: protectedProcedure
+      .input(z.object({
+        updates: z.array(z.object({
+          id: z.number(),
+          ordem: z.number(),
+        })),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        // Verificar se usuário é MASTER ou DIRETOR
+        const profile = await db.getUserProfile(ctx.user.id);
+        if (!profile || !["MASTER", "DIRETOR"].includes(profile.feedbackRole)) {
+          throw new Error("Apenas Master ou Diretor podem reordenar quesitos");
+        }
+
+        await dbQuesitos.reorderQuesitos(input.updates);
+        return { success: true };
+      }),
+  }),
 
 });
 

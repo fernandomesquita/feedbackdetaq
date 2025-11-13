@@ -230,6 +230,27 @@ export type Template = typeof templates.$inferSelect;
 export type InsertTemplate = typeof templates.$inferInsert;
 
 /**
+ * TABELA DE QUESITOS DE FEEDBACK
+ */
+export const quesitos = mysqlTable("quesitos", {
+  id: int("id").autoincrement().primaryKey(),
+  titulo: varchar("titulo", { length: 255 }).notNull(),
+  descricao: text("descricao"),
+  ordem: int("ordem").notNull().default(0),
+  isActive: boolean("isActive").notNull().default(true),
+  userId: int("userId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  userIdx: index("user_idx").on(table.userId),
+  ordemIdx: index("ordem_idx").on(table.ordem),
+  isActiveIdx: index("is_active_idx").on(table.isActive),
+}));
+
+export type Quesito = typeof quesitos.$inferSelect;
+export type InsertQuesito = typeof quesitos.$inferInsert;
+
+/**
  * TABELA DE LOGS DE AUDITORIA
  */
 export const auditLogs = mysqlTable("audit_logs", {
@@ -267,6 +288,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   avisos: many(avisos),
   templates: many(templates),
   padronizacoes: many(padronizacao),
+  quesitos: many(quesitos),
   auditLogs: many(auditLogs),
 }));
 
@@ -367,6 +389,13 @@ export const padronizacaoReadsRelations = relations(padronizacaoReads, ({ one })
 export const templatesRelations = relations(templates, ({ one }) => ({
   user: one(users, {
     fields: [templates.userId],
+    references: [users.id],
+  }),
+}));
+
+export const quesitosRelations = relations(quesitos, ({ one }) => ({
+  creator: one(users, {
+    fields: [quesitos.userId],
     references: [users.id],
   }),
 }));
