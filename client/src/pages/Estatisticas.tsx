@@ -36,6 +36,7 @@ export default function Estatisticas() {
   const { data: averageRating } = trpc.statistics.averageRating.useQuery();
   const { data: topTaquigrafos } = trpc.statistics.topTaquigrafos.useQuery({ limit: 10 });
   const { data: topRevisores } = trpc.statistics.topRevisores.useQuery({ limit: 10 });
+  const { data: quesitoStats } = trpc.statistics.quesitosGlobal.useQuery();
 
   const canViewAll = feedbackRole === "MASTER" || feedbackRole === "DIRETOR";
 
@@ -70,6 +71,13 @@ export default function Estatisticas() {
     name: item.type === "ENTENDI" ? "Entendi" : item.type === "OBRIGADO" ? "Obrigado" : "Vou Melhorar",
     value: item.count,
     type: item.type,
+  })) || [];
+
+  const quesitoData = quesitoStats?.map((item: any) => ({
+    name: item.quesitoTitulo,
+    usos: Number(item.totalUsos || 0),
+    revisores: Number(item.totalRevisores || 0),
+    taquigrafos: Number(item.totalTaquigrafos || 0),
   })) || [];
 
   return (
@@ -307,6 +315,51 @@ export default function Estatisticas() {
             </Card>
           )}
         </div>
+
+        {/* Quesitos Mais Usados (apenas para MASTER/DIRETOR) */}
+        {canViewAll && quesitoData.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Quesitos Mais Usados em Feedbacks
+              </CardTitle>
+              <CardDescription>Distribuição de uso dos quesitos nos feedbacks</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart data={quesitoData} layout="vertical" margin={{ left: 120, right: 30 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis type="number" />
+                  <YAxis type="category" dataKey="name" width={110} />
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-background border rounded-lg p-3 shadow-lg">
+                            <p className="font-semibold mb-2">{payload[0].payload.name}</p>
+                            <p className="text-sm text-muted-foreground">
+                              Usos totais: <span className="font-semibold text-foreground">{payload[0].value}</span>
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Revisores: <span className="font-semibold text-foreground">{payload[0].payload.revisores}</span>
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Taquígrafos: <span className="font-semibold text-foreground">{payload[0].payload.taquigrafos}</span>
+                            </p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Legend />
+                  <Bar dataKey="usos" fill="#8b5cf6" name="Quantidade de Usos" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Rankings (apenas para MASTER/DIRETOR) */}
         {canViewAll && (

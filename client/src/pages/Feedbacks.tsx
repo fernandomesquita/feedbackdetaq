@@ -145,12 +145,29 @@ export default function Feedbacks() {
                           </div>
 
                           <div>
-                            {feedback.title && (
-                              <h3 className="font-semibold text-lg">{feedback.title}</h3>
+                            {item.quesitos && item.quesitos.length > 0 ? (
+                              <div className="space-y-2">
+                                <p className="text-sm text-muted-foreground">Quesitos avaliados:</p>
+                                <div className="flex gap-2 flex-wrap">
+                                  {item.quesitos.map((quesito: any) => (
+                                    <Badge key={quesito.id} variant="outline" className="text-xs">
+                                      {quesito.quesitoTitulo}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+                            ) : (
+                              <>
+                                {feedback.title && (
+                                  <h3 className="font-semibold text-lg">{feedback.title}</h3>
+                                )}
+                                {feedback.content && (
+                                  <p className="text-muted-foreground line-clamp-2">
+                                    {feedback.content}
+                                  </p>
+                                )}
+                              </>
                             )}
-                            <p className="text-muted-foreground line-clamp-2">
-                              {feedback.content}
-                            </p>
                           </div>
 
                           <div className="flex items-center gap-4 text-sm text-muted-foreground">

@@ -137,15 +137,33 @@ export const appRouter = router({
       }).optional())
       .query(async ({ ctx, input }) => {
         const { getFeedbacksByTaquigrafo, getFeedbacksByRevisor, getAllFeedbacks } = await import("./db-feedbacks");
+        const { getFeedbackQuesitos } = await import("./db-feedback-quesitos");
         const profile = await db.getUserProfile(ctx.user.id);
-        
+
+        let feedbacksList;
         if (profile?.feedbackRole === "TAQUIGRAFO") {
-          return getFeedbacksByTaquigrafo(ctx.user.id, input);
+          feedbacksList = await getFeedbacksByTaquigrafo(ctx.user.id, input);
         } else if (profile?.feedbackRole === "REVISOR") {
-          return getFeedbacksByRevisor(ctx.user.id, input);
+          feedbacksList = await getFeedbacksByRevisor(ctx.user.id, input);
         } else {
-          return getAllFeedbacks(input);
+          feedbacksList = await getAllFeedbacks(input);
         }
+
+        // Adicionar quesitos a cada feedback
+        const feedbacksWithQuesitos = await Promise.all(
+          feedbacksList.map(async (item: any) => {
+            const quesitos = await getFeedbackQuesitos(item.feedback.id);
+            return {
+              ...item,
+              quesitos: quesitos.map((q: any) => ({
+                id: q.id,
+                quesitoTitulo: q.quesito?.titulo,
+              })),
+            };
+          })
+        );
+
+        return feedbacksWithQuesitos;
       }),
 
     getById: protectedProcedure
@@ -550,6 +568,13 @@ export const appRouter = router({
     averageRating: protectedProcedure
       .query(async () => {
         const stats = await dbStatistics.getAverageRating();
+        return stats;
+      }),
+
+    quesitosGlobal: protectedProcedure
+      .query(async () => {
+        const { getGlobalQuesitoStats } = await import("./db-feedback-quesitos");
+        const stats = await getGlobalQuesitoStats();
         return stats;
       }),
   }),

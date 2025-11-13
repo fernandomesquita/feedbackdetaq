@@ -140,3 +140,29 @@ export async function getQuesitoStatsByTaquigrafo(taquigId: number) {
 
   return result;
 }
+
+/**
+ * Estatísticas globais de quesitos mais usados
+ */
+export async function getGlobalQuesitoStats() {
+  const db = await getDb();
+  if (!db) return [];
+
+  const result = await db.execute(sql`
+    SELECT
+      q.id as quesitoId,
+      q.titulo as quesitoTitulo,
+      q.descricao as quesitoDescricao,
+      COUNT(fq.id) as totalUsos,
+      COUNT(DISTINCT f.revisorId) as totalRevisores,
+      COUNT(DISTINCT f.taquigId) as totalTaquigrafos
+    FROM feedback_quesitos fq
+    INNER JOIN quesitos q ON fq.quesitoId = q.id
+    INNER JOIN feedbacks f ON fq.feedbackId = f.id
+    WHERE q.isActive = true
+    GROUP BY q.id, q.titulo, q.descricao
+    ORDER BY totalUsos DESC
+  `);
+
+  return result;
+}
