@@ -8,6 +8,15 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { uploadRouter } from "../upload";
+import { migrate } from "drizzle-orm/mysql2/migrator";
+import { drizzle } from "drizzle-orm/mysql2";
+import { readdir } from "fs/promises";
+import { join } from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -28,7 +37,34 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
   throw new Error(`No available port found starting from ${startPort}`);
 }
 
+async function runMigrations() {
+  if (!process.env.DATABASE_URL) {
+    console.warn('[Migration] DATABASE_URL not set, skipping migrations');
+    return;
+  }
+
+  try {
+    console.log('[Migration] Running database migrations...');
+    const db = drizzle(process.env.DATABASE_URL);
+
+    // Get migrations folder path
+    const migrationsFolder = join(__dirname, '../../drizzle');
+
+    // Run migrations
+    await migrate(db, { migrationsFolder });
+
+    console.log('[Migration] ✓ Database migrations completed successfully');
+  } catch (error: any) {
+    console.error('[Migration] Failed to run migrations:', error.message);
+    // Don't exit - allow server to start even if migrations fail
+    // This prevents deployment failures if migrations have already been applied
+  }
+}
+
 async function startServer() {
+  // Run migrations before starting server
+  await runMigrations();
+
   const app = express();
   const server = createServer(app);
   // Configure body parser with larger size limit for file uploads
