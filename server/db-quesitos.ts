@@ -1,4 +1,4 @@
-import { db } from "../drizzle/db";
+import { getDb } from "./db";
 import { quesitos, type Quesito, type InsertQuesito } from "../drizzle/schema";
 import { eq, and, desc } from "drizzle-orm";
 
@@ -6,6 +6,9 @@ import { eq, and, desc } from "drizzle-orm";
  * Busca todos os quesitos
  */
 export async function getQuesitos(filters?: { isActive?: boolean }): Promise<Quesito[]> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
   const conditions = [];
 
   if (filters?.isActive !== undefined) {
@@ -30,6 +33,9 @@ export async function getQuesitos(filters?: { isActive?: boolean }): Promise<Que
  * Busca um quesito por ID
  */
 export async function getQuesitoById(id: number): Promise<Quesito | undefined> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
   const result = await db
     .select()
     .from(quesitos)
@@ -43,6 +49,9 @@ export async function getQuesitoById(id: number): Promise<Quesito | undefined> {
  * Cria um novo quesito
  */
 export async function createQuesito(data: InsertQuesito): Promise<Quesito> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
   const result = await db.insert(quesitos).values(data);
   const insertedId = result[0].insertId;
 
@@ -61,6 +70,9 @@ export async function updateQuesito(
   id: number,
   data: Partial<InsertQuesito>
 ): Promise<Quesito> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
   await db
     .update(quesitos)
     .set(data)
@@ -78,6 +90,9 @@ export async function updateQuesito(
  * Deleta um quesito
  */
 export async function deleteQuesito(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
   await db.delete(quesitos).where(eq(quesitos.id, id));
 }
 
@@ -85,6 +100,9 @@ export async function deleteQuesito(id: number): Promise<void> {
  * Conta o total de quesitos
  */
 export async function countQuesitos(filters?: { isActive?: boolean }): Promise<number> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
   const conditions = [];
 
   if (filters?.isActive !== undefined) {
@@ -105,6 +123,9 @@ export async function countQuesitos(filters?: { isActive?: boolean }): Promise<n
 export async function reorderQuesitos(
   updates: Array<{ id: number; ordem: number }>
 ): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
   // Atualiza a ordem de cada quesito
   await Promise.all(
     updates.map(({ id, ordem }) =>
