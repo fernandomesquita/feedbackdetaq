@@ -155,7 +155,8 @@ export default function Estatisticas() {
   // Função para gerar PDF
   const handleDownloadPDF = async () => {
     try {
-      const { jsPDF } = await import('jspdf');
+      const jsPDFModule = await import('jspdf');
+      const jsPDF = jsPDFModule.default || jsPDFModule.jsPDF;
       await import('jspdf-autotable');
 
       const doc = new jsPDF() as any;

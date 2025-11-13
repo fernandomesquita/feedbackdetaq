@@ -239,30 +239,29 @@ export async function getTopTaquigrafos(limit: number = 10, filters?: {
   const db = await getDb();
   if (!db) return [];
 
-  const dateConditions = [];
+  // Query para obter top taquígrafos com média de avaliação
+  let query = sql`SELECT
+    f.taquigId,
+    u.name,
+    COUNT(*) as feedbackCount,
+    AVG(f.rating) as avgRating
+  FROM feedbacks f
+  LEFT JOIN users u ON f.taquigId = u.id
+  WHERE 1=1`;
+
   if (filters?.startDate) {
-    dateConditions.push(gte(feedbacks.createdAt, filters.startDate));
+    query = sql`${query} AND f.createdAt >= ${filters.startDate}`;
   }
   if (filters?.endDate) {
-    dateConditions.push(lte(feedbacks.createdAt, filters.endDate));
+    query = sql`${query} AND f.createdAt <= ${filters.endDate}`;
   }
 
-  const dateFilter = dateConditions.length > 0 ? and(...dateConditions) : undefined;
-
-  // Query para obter top taquígrafos com média de avaliação
-  const result: any = await db.execute(
-    sql`SELECT
-      f.taquigId,
-      u.name,
-      COUNT(*) as feedbackCount,
-      AVG(f.rating) as avgRating
-    FROM feedbacks f
-    LEFT JOIN users u ON f.taquigId = u.id
-    ${dateFilter ? sql`WHERE ${dateFilter}` : sql``}
+  query = sql`${query}
     GROUP BY f.taquigId, u.name
     ORDER BY feedbackCount DESC
-    LIMIT ${limit}`
-  );
+    LIMIT ${limit}`;
+
+  const result: any = await db.execute(query);
 
   const rows = result[0] || [];
   return rows.map((row: any) => ({
@@ -327,23 +326,23 @@ export async function getReactionStats(filters?: {
 
   // Precisamos filtrar reações baseadas nas datas dos feedbacks
   if (filters?.startDate || filters?.endDate) {
-    const dateConditions = [];
+    let query = sql`SELECT
+      r.type,
+      COUNT(*) as count
+    FROM reactions r
+    INNER JOIN feedbacks f ON r.feedbackId = f.id
+    WHERE 1=1`;
+
     if (filters?.startDate) {
-      dateConditions.push(gte(feedbacks.createdAt, filters.startDate));
+      query = sql`${query} AND f.createdAt >= ${filters.startDate}`;
     }
     if (filters?.endDate) {
-      dateConditions.push(lte(feedbacks.createdAt, filters.endDate));
+      query = sql`${query} AND f.createdAt <= ${filters.endDate}`;
     }
 
-    const result: any = await db.execute(
-      sql`SELECT
-        r.type,
-        COUNT(*) as count
-      FROM reactions r
-      INNER JOIN feedbacks f ON r.feedbackId = f.id
-      WHERE ${and(...dateConditions)}
-      GROUP BY r.type`
-    );
+    query = sql`${query} GROUP BY r.type`;
+
+    const result: any = await db.execute(query);
 
     const rows = result[0] || [];
     return rows.map((row: any) => ({
