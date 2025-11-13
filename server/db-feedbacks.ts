@@ -98,6 +98,7 @@ export async function getFeedbacksByTaquigrafo(taquigId: number, filters?: {
 
 export async function getFeedbacksByRevisor(revisorId: number, filters?: {
   type?: "CORRETIVO" | "POSITIVO";
+  isRead?: boolean;
   startDate?: Date;
   endDate?: Date;
   search?: string;
@@ -109,6 +110,10 @@ export async function getFeedbacksByRevisor(revisorId: number, filters?: {
 
   if (filters?.type) {
     conditions.push(eq(feedbacks.type, filters.type));
+  }
+
+  if (filters?.isRead !== undefined) {
+    conditions.push(eq(feedbacks.isRead, filters.isRead));
   }
 
   if (filters?.startDate) {
@@ -147,6 +152,7 @@ export async function getFeedbacksByRevisor(revisorId: number, filters?: {
 
 export async function getAllFeedbacks(filters?: {
   type?: "CORRETIVO" | "POSITIVO";
+  isRead?: boolean;
   startDate?: Date;
   endDate?: Date;
   search?: string;
@@ -158,6 +164,10 @@ export async function getAllFeedbacks(filters?: {
 
   if (filters?.type) {
     conditions.push(eq(feedbacks.type, filters.type));
+  }
+
+  if (filters?.isRead !== undefined) {
+    conditions.push(eq(feedbacks.isRead, filters.isRead));
   }
 
   if (filters?.startDate) {
